@@ -12,8 +12,8 @@ public class Set {
     public Set() {
     }
 
-    public String getId() {return this.set_num;}
-    public void setId(String set_num) {this.set_num=set_num;}
+    public String getSet_num() {return this.set_num;}
+    public void setSet_num(String set_num) {this.set_num=set_num;}
 
     public String getName() {return this.name;}
     public void setName(String name) {this.name = name;}
