@@ -27,7 +27,7 @@ public class PartCategory {
         return "PartCategory{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", part_count='" + part_count + '\'' +
+                ", part_count=" + part_count +
                 '}';
     }
 }

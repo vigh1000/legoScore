@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Part;
+import java.util.Scanner;
 
 @SpringBootApplication
 public class LegoScoreApplication {
@@ -25,10 +26,15 @@ public class LegoScoreApplication {
 
 	@Bean
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
+		Scanner scanner = new Scanner(System.in);
+		String inputSet = scanner.nextLine();
 		return args -> {
-			PartCategory partCategory = restTemplate.getForObject(
-			"https://rebrickable.com/api/v3/lego/part_categories/12/?key=d4f0a3eaa0fc59ffc6f425289e8640c2", PartCategory.class);
-			log.info(partCategory.toString());
+			//PartCategory partCategory = restTemplate.getForObject(
+			Set set = restTemplate.getForObject(
+			//"https://rebrickable.com/api/v3/lego/part_categories/12/?key=d4f0a3eaa0fc59ffc6f425289e8640c2", PartCategory.class);
+			"https://rebrickable.com/api/v3/lego/sets/" + inputSet + "/?key=d4f0a3eaa0fc59ffc6f425289e8640c2", Set.class);
+			//log.info(partCategory.toString());
+			log.info(set.toString());
 		};
 	}
 }
