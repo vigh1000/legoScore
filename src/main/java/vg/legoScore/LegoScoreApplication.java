@@ -9,7 +9,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.Part;
 import java.util.Scanner;
 
 @SpringBootApplication
@@ -27,14 +26,17 @@ public class LegoScoreApplication {
 	@Bean
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
 		Scanner scanner = new Scanner(System.in);
-		String inputSet = scanner.nextLine();
+		String input = scanner.nextLine();
 		return args -> {
 			//PartCategory partCategory = restTemplate.getForObject(
-			Set set = restTemplate.getForObject(
+			//Set set = restTemplate.getForObject(
+			Part part = restTemplate.getForObject(
 			//"https://rebrickable.com/api/v3/lego/part_categories/12/?key=d4f0a3eaa0fc59ffc6f425289e8640c2", PartCategory.class);
-			"https://rebrickable.com/api/v3/lego/sets/" + inputSet + "/?key=d4f0a3eaa0fc59ffc6f425289e8640c2", Set.class);
+			//"https://rebrickable.com/api/v3/lego/sets/" + input + "/?key=d4f0a3eaa0fc59ffc6f425289e8640c2", Set.class);
+			"https://rebrickable.com/api/v3/lego/parts/" + input + "/?key=d4f0a3eaa0fc59ffc6f425289e8640c2", Part.class);
 			//log.info(partCategory.toString());
-			log.info(set.toString());
+			//log.info(set.toString());
+			log.info(part.toString());
 		};
 	}
 }
