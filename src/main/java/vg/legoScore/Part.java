@@ -23,7 +23,7 @@ public class Part {
 
     @Override
     public String toString() {
-        return "PartCategory{" +
+        return "Part{" +
                 "part_num='" + part_num + '\'' +
                 ", name='" + name + '\'' +
                 ", part_cat_id='" + part_cat_id + '\'' +

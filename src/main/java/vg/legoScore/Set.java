@@ -23,7 +23,7 @@ public class Set {
 
     @Override
     public String toString() {
-        return "PartCategory{" +
+        return "Set{" +
                 "set_num='" + set_num + '\'' +
                 ", name='" + name + '\'' +
                 ", num_parts=" + num_parts +
