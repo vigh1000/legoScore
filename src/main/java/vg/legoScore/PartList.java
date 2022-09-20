@@ -33,6 +33,11 @@ public class PartList extends RebrickableWebService {
         "https://rebrickable.com/api/v3/lego/sets/" + input + "/parts/?key=" + getKey(), PartList.class);
     }
 
+    public PartList callNext(String nextUrl, RestTemplate restTemplate) {
+        return restTemplate.getForObject(
+          nextUrl, PartList.class);
+    }
+
     @Override
     public String toString() {
         return "PartList{" +

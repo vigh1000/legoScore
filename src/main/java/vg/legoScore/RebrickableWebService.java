@@ -12,7 +12,7 @@ public abstract class RebrickableWebService {
     RebrickableWebService() {
         setKey(keyFile);
     }
-    public String getKey() {
+    protected String getKey() {
         return key;
     }
     public void setKey(File keyFile) {
