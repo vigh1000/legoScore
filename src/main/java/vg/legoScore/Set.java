@@ -25,7 +25,7 @@ public class Set extends RebrickableWebService {
     @Override
     public Set callRebrickable(String input, RestTemplate restTemplate) {
         return restTemplate.getForObject(
-        "https://rebrickable.com/api/v3/lego/sets/" + input + "/?key=" + key, Set.class);
+        "https://rebrickable.com/api/v3/lego/sets/" + input + "/?key=" + getKey(), Set.class);
     }
 
     @Override

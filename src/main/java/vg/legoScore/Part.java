@@ -26,7 +26,7 @@ public class Part extends RebrickableWebService {
     @Override
     public Part callRebrickable(String input, RestTemplate restTemplate) {
         return restTemplate.getForObject(
-        "https://rebrickable.com/api/v3/lego/parts/" + input + "/?key="+key, Part.class);
+        "https://rebrickable.com/api/v3/lego/parts/" + input + "/?key=" + getKey(), Part.class);
     }
 
     @Override
