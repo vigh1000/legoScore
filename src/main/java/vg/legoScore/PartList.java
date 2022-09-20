@@ -1,12 +1,13 @@
 package vg.legoScore;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PartList {
+public class PartList extends RebrickableWebService {
 
     private Long count;
     private String next;
@@ -25,6 +26,12 @@ public class PartList {
 
     public List<Part> getResults() {return results;}
     public void setResults(ArrayList results) {this.results = results;}
+
+    @Override
+    public PartList callRebrickable(String input, RestTemplate restTemplate) {
+        return restTemplate.getForObject(
+        "https://rebrickable.com/api/v3/lego/sets/" + input + "/parts/?key=" + key, PartList.class);
+    }
 
     @Override
     public String toString() {

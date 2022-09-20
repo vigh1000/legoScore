@@ -28,18 +28,8 @@ public class LegoScoreApplication {
 		Scanner scanner = new Scanner(System.in);
 		String input = scanner.nextLine();
 		return args -> {
-			//PartCategory partCategory = restTemplate.getForObject(
-			//Set set = restTemplate.getForObject(
-			//Part part = restTemplate.getForObject(
-//			PartList partList = restTemplate.getForObject(
-//			//"https://rebrickable.com/api/v3/lego/part_categories/12/?key=d4f0a3eaa0fc59ffc6f425289e8640c2", PartCategory.class);
-//			//"https://rebrickable.com/api/v3/lego/sets/" + input + "/?key=d4f0a3eaa0fc59ffc6f425289e8640c2", Set.class);
-//			//"https://rebrickable.com/api/v3/lego/parts/" + input + "/?key=d4f0a3eaa0fc59ffc6f425289e8640c2", Part.class);
-//			"https://rebrickable.com/api/v3/lego/sets/" + input + "/parts/?key=d4f0a3eaa0fc59ffc6f425289e8640c2", PartList.class);
-			PartCategory partCategory = new PartCategory().callRebrickable(input,restTemplate);
+			RebrickableWebService partCategory = new PartCategory().callRebrickable(input,restTemplate);
 			log.info(partCategory.toString());
-			//log.info(set.toString());
-			//log.info(partList.toString());
 			log.info("Gewünschtes Set war: " + input);
 		};
 	}
