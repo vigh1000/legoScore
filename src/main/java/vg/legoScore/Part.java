@@ -1,7 +1,6 @@
 package vg.legoScore;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.web.client.RestTemplate;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

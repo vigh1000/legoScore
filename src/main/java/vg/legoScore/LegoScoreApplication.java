@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -48,13 +49,22 @@ public class LegoScoreApplication {
 						System.out.println("Enter set number for part list: ");
 						input = scanner.next();
 						webServiceObject = new PartList().callRebrickable(input, restTemplate);
-						List<Part> parts = new ArrayList<Part>();
-						parts.addAll(((PartList) webServiceObject).getResults());
+
+						List<Results> results = new ArrayList<Results>();
+						results.addAll(((PartList) webServiceObject).getResults());
+
 						while (((PartList) webServiceObject).getNext() != null) {
 							webServiceObject = ((PartList) webServiceObject).callNext(((PartList) webServiceObject).getNext(), restTemplate);
-							parts.addAll(((PartList) webServiceObject).getResults());
+							results.addAll(((PartList) webServiceObject).getResults());
 						}
-						log.info(String.valueOf(parts.size()));
+
+						List<Part> parts = new ArrayList<Part>();
+						for(int i=0; i <= results.size(); i++){
+							parts.add(results.get(i).getPart());
+						}
+//						for (Results result : results) {
+//							parts.add(result.getPart());
+//						}
 						break;
 					case 4:
 						System.out.println("Enter Part Category: ");

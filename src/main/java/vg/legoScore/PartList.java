@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -11,11 +12,10 @@ public class PartList extends RebrickableWebService {
 
     private Long count;
     private String next;
-
-    private List<Part> results;
+    private List<Results> results;
 
     public PartList() {
-        results = new ArrayList<>();
+        results = new ArrayList<Results>();
     }
 
     public Long getCount() {return this.count;}
@@ -24,7 +24,7 @@ public class PartList extends RebrickableWebService {
     public String getNext() {return this.next;}
     public void setNext(String name) {this.next = name;}
 
-    public List<Part> getResults() {return results;}
+    public List<Results> getResults() {return results;}
     public void setResults(ArrayList results) {this.results = results;}
 
     @Override
