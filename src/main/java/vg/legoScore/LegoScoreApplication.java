@@ -59,12 +59,13 @@ public class LegoScoreApplication {
 						}
 
 						List<Part> parts = new ArrayList<Part>();
-						for(int i=0; i <= results.size(); i++){
-							parts.add(results.get(i).getPart());
+						int totalParts = 0;
+						for (Results result : results) {
+							parts.add(result.getPart());
+							totalParts += result.getQuantity();
 						}
-//						for (Results result : results) {
-//							parts.add(result.getPart());
-//						}
+						log.info(parts.get(3).getName());
+						log.info(String.valueOf(totalParts));
 						break;
 					case 4:
 						System.out.println("Enter Part Category: ");

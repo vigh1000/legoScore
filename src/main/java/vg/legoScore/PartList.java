@@ -25,7 +25,7 @@ public class PartList extends RebrickableWebService {
     public void setNext(String name) {this.next = name;}
 
     public List<Results> getResults() {return results;}
-    public void setResults(ArrayList results) {this.results = results;}
+    public void setResults(List<Results> results) {this.results = results;}
 
     @Override
     public PartList callRebrickable(String input, RestTemplate restTemplate) {
