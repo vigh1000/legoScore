@@ -1,20 +1,18 @@
 package vg.legoScore;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PartList {
+public class SetParts {
 
     private Long count;
     private String next;
     private List<Results> results;
 
-    public PartList() {
+    public SetParts() {
         results = new ArrayList<Results>();
     }
 

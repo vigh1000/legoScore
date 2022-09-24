@@ -35,14 +35,14 @@ public class RebrickableWebService {
                 "https://rebrickable.com/api/v3/lego/parts/" + input + "/?key=" + getKey(), Part.class);
     }
 
-    public PartList callRebrickablePartList(String input) {
+    public SetParts callRebrickableSetParts(String input) {
         return restTemplate.getForObject(
-                "https://rebrickable.com/api/v3/lego/sets/" + input + "/parts/?key=" + getKey(), PartList.class);
+                "https://rebrickable.com/api/v3/lego/sets/" + input + "/parts/?key=" + getKey(), SetParts.class);
     }
 
-    public PartList callNextPartList(String nextUrl) {
+    public SetParts callNextSetParts(String nextUrl) {
         return restTemplate.getForObject(
-                nextUrl, PartList.class);
+                nextUrl, SetParts.class);
     }
 
     public Set callRebrickableSet(String input) {
