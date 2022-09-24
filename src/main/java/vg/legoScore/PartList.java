@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PartList extends RebrickableWebService {
+public class PartList {
 
     private Long count;
     private String next;
@@ -27,18 +27,6 @@ public class PartList extends RebrickableWebService {
     public List<Results> getResults() {return results;}
     public void setResults(List<Results> results) {this.results = results;}
 
-    @Override
-    public PartList callRebrickable(String input, RestTemplate restTemplate) {
-        return restTemplate.getForObject(
-        "https://rebrickable.com/api/v3/lego/sets/" + input + "/parts/?key=" + getKey(), PartList.class);
-    }
-
-    public PartList callNext(String nextUrl, RestTemplate restTemplate) {
-        return restTemplate.getForObject(
-          nextUrl, PartList.class);
-    }
-
-    @Override
     public String toString() {
         return "PartList{" +
                 "count='" + count + '\'' +
