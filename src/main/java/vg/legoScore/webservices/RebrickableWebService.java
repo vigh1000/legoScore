@@ -54,7 +54,7 @@ public class RebrickableWebService {
                 "https://rebrickable.com/api/v3/lego/sets/" + input + "/?key=" + getKey(), Set.class);
     }
 
-    public PartCategory callRebrickablePartCategotry(String input) {
+    public PartCategory callRebrickablePartCategory(String input) {
         return restTemplate.getForObject(
                 "https://rebrickable.com/api/v3/lego/part_categories/" + input + "/?key=" + getKey(), PartCategory.class);
     }

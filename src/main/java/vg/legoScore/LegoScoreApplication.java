@@ -80,7 +80,7 @@ public class LegoScoreApplication {
 				case 4:
 					System.out.println("Enter Part Category: ");
 					input = scanner.next();
-					PartCategory partCategory = webServiceObject.callRebrickablePartCategotry(input);
+					PartCategory partCategory = webServiceObject.callRebrickablePartCategory(input);
 					log.info(partCategory.toString());
 					break;
 				case 0:

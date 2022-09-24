@@ -1,7 +1,6 @@
 package vg.legoScore.rebrickableObjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import vg.legoScore.rebrickableObjects.Part;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Results {
