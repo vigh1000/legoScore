@@ -9,10 +9,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 @SpringBootApplication
 public class LegoScoreApplication {
@@ -60,9 +57,11 @@ public class LegoScoreApplication {
 
 						List<Part> parts = new ArrayList<Part>();
 						int totalParts = 0;
+						HashMap<Part,Long> partHashMap = new HashMap<Part, Long>();
 						for (Results result : results) {
 							parts.add(result.getPart());
 							totalParts += result.getQuantity();
+							partHashMap.put(result.getPart(),Long.valueOf(String.valueOf(result.getQuantity())));
 						}
 						log.info(parts.get(3).getName());
 						log.info(String.valueOf(totalParts));
