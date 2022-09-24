@@ -30,15 +30,17 @@ public class LegoScoreApplication {
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
 		return args -> {
 			//firstTry(restTemplate);
+
 			Scanner scanner = new Scanner(System.in);
-			String input;
-			System.out.println("Enter set number: ");
-			input = scanner.next();
-			CompleteSet completeSet = new CompleteSet(input, restTemplate);
-			log.info(completeSet.setDetails.toString());
-//			log.info(completeSet.parts.get(3).getName());
-//			log.info(String.valueOf(completeSet.totalParts));
-//			log.info(completeSet.setDetails.getNum_parts().toString());
+			while (true) {
+				String input;
+				System.out.println("Enter set number: ");
+				input = scanner.next();
+				CompleteSet completeSet = new CompleteSet(input, restTemplate);
+				log.info(completeSet.setDetails.toString());
+				log.info("Total quantity from PartList: " + String.valueOf(completeSet.getTotalPartsQuantity()));
+				log.info("Total quantity from Set Details: " + completeSet.setDetails.getNum_parts().toString());
+			}
 		};
 	}
 
