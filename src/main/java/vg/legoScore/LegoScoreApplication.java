@@ -66,15 +66,15 @@ public class LegoScoreApplication {
 				case 3:
 					System.out.println("Enter set number for part list: ");
 					input = scanner.next();
-					SetParts setParts = webServiceObject.callRebrickableSetParts(input);
+					SetPartList setPartList = webServiceObject.callRebrickableSetParts(input);
 
 					List<Results> results = new ArrayList<Results>();
-					results.addAll(setParts.getResults());
-					log.info(setParts.toString());
-					while (setParts.getNext() != null) {
-						setParts = webServiceObject.callNextSetParts(setParts.getNext());
-						results.addAll(setParts.getResults());
-						log.info(setParts.toString());
+					results.addAll(setPartList.getResults());
+					log.info(setPartList.toString());
+					while (setPartList.getNext() != null) {
+						setPartList = webServiceObject.callNextSetParts(setPartList.getNext());
+						results.addAll(setPartList.getResults());
+						log.info(setPartList.toString());
 					}
 
 					List<Part> parts = new ArrayList<Part>();

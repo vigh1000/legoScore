@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SetParts {
+public class SetPartList {
 
     private Long count;
     private String next;
     private List<Results> results;
 
-    public SetParts() {
+    public SetPartList() {
         results = new ArrayList<Results>();
     }
 

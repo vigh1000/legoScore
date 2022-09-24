@@ -4,24 +4,22 @@ import org.springframework.web.client.RestTemplate;
 import vg.legoScore.rebrickableObjects.Part;
 import vg.legoScore.rebrickableObjects.Results;
 import vg.legoScore.rebrickableObjects.Set;
-import vg.legoScore.rebrickableObjects.SetParts;
+import vg.legoScore.rebrickableObjects.SetPartList;
 import vg.legoScore.webservices.RebrickableWebService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.SortedMap;
 
 public class CompleteSet {
     private RestTemplate restTemplate;
-    private SetParts parts;
 
     private String legoSetNr;
     private String rebrickableSetNr;
     private int totalPartsQuantity;
 
     public Set setDetails;
-    public HashMap<Part,Long> partQuantityMap = new HashMap<Part, Long>();
+    public HashMap<Part,Long> setPartListQuantityMap = new HashMap<Part, Long>();
 
     public CompleteSet(RestTemplate restTemplate) {
 
@@ -37,27 +35,22 @@ public class CompleteSet {
         setRebrickableSetNr(rebrickableSetNr);
         setLegoSetNr(rebrickableSetNr.substring(0,5));
         setDetails = webServiceObject.callRebrickableSet(this.rebrickableSetNr);
-        parts = webServiceObject.callRebrickableSetParts(this.rebrickableSetNr);
 
-        setPartQuantityMap(webServiceObject);
+        setSetPartListQuantityMap(webServiceObject);
     }
 
-    private void setPartQuantityMap(RebrickableWebService webServiceObject) {
-        List<Results> results = new ArrayList<Results>();
-        results.addAll(parts.getResults());
-        while (parts.getNext() != null) {
-            parts = webServiceObject.callNextSetParts(parts.getNext());
-            results.addAll(parts.getResults());
+    private void setSetPartListQuantityMap(RebrickableWebService webServiceObject) {
+        SetPartList setPartList = webServiceObject.callRebrickableSetParts(this.rebrickableSetNr);
+        while (true) {
+            List<Results> results = new ArrayList<Results>();
+            results.addAll(setPartList.getResults());
+            for (Results result : results) {
+                addToTotalPartsQuantity(result.getQuantity());
+                setPartListQuantityMap.put(result.getPart(),Long.valueOf(String.valueOf(result.getQuantity())));
+            }
+            if (setPartList.getNext() != null) setPartList = webServiceObject.callNextSetParts(setPartList.getNext());
+            else break;
         }
-
-        List<Part> parts = new ArrayList<Part>();
-        int totalParts = 0;
-        for (Results result : results) {
-            parts.add(result.getPart());
-            totalParts += result.getQuantity();
-            partQuantityMap.put(result.getPart(),Long.valueOf(String.valueOf(result.getQuantity())));
-        }
-        setTotalPartsQuantity(totalParts);
     }
 
     public String getLegoSetNr() {
@@ -80,4 +73,5 @@ public class CompleteSet {
 
     public int getTotalPartsQuantity() { return totalPartsQuantity;}
     public void setTotalPartsQuantity(int totalPartsQuantity) { this.totalPartsQuantity = totalPartsQuantity;}
+    private void addToTotalPartsQuantity(int quantityToAdd) {totalPartsQuantity += quantityToAdd;}
 }

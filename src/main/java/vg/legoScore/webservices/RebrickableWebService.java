@@ -4,7 +4,7 @@ import org.springframework.web.client.RestTemplate;
 import vg.legoScore.rebrickableObjects.Part;
 import vg.legoScore.rebrickableObjects.PartCategory;
 import vg.legoScore.rebrickableObjects.Set;
-import vg.legoScore.rebrickableObjects.SetParts;
+import vg.legoScore.rebrickableObjects.SetPartList;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,14 +39,14 @@ public class RebrickableWebService {
                 "https://rebrickable.com/api/v3/lego/parts/" + input + "/?key=" + getKey(), Part.class);
     }
 
-    public SetParts callRebrickableSetParts(String input) {
+    public SetPartList callRebrickableSetParts(String input) {
         return restTemplate.getForObject(
-                "https://rebrickable.com/api/v3/lego/sets/" + input + "/parts/?key=" + getKey(), SetParts.class);
+                "https://rebrickable.com/api/v3/lego/sets/" + input + "/parts/?key=" + getKey(), SetPartList.class);
     }
 
-    public SetParts callNextSetParts(String nextUrl) {
+    public SetPartList callNextSetParts(String nextUrl) {
         return restTemplate.getForObject(
-                nextUrl, SetParts.class);
+                nextUrl, SetPartList.class);
     }
 
     public Set callRebrickableSet(String input) {
