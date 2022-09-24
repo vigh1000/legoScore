@@ -26,7 +26,7 @@ public class LegoScoreApplication {
 	@Bean
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
 		return args -> {
-			RebrickableWebService webServiceObject = null;
+			RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate);
 			Scanner scanner = new Scanner(System.in);
 			String input;
 
@@ -35,24 +35,27 @@ public class LegoScoreApplication {
 					case 1:
 						System.out.println("Enter part number: ");
 						input = scanner.next();
-						webServiceObject = new Part().callRebrickable(input, restTemplate);
+						Part part = webServiceObject.callRebrickablePart(input);
+						log.info(part.toString());
 						break;
 					case 2:
 						System.out.println("Enter set number for set details: ");
 						input = scanner.next();
-						webServiceObject = new Set().callRebrickable(input, restTemplate);
+						Set set = webServiceObject.callRebrickableSet(input);
+						log.info(set.toString());
 						break;
 					case 3:
 						System.out.println("Enter set number for part list: ");
 						input = scanner.next();
-						webServiceObject = new PartList().callRebrickable(input, restTemplate);
+						PartList partList = webServiceObject.callRebrickablePartList(input);
 
 						List<Results> results = new ArrayList<Results>();
-						results.addAll(((PartList) webServiceObject).getResults());
-
-						while (((PartList) webServiceObject).getNext() != null) {
-							webServiceObject = ((PartList) webServiceObject).callNext(((PartList) webServiceObject).getNext(), restTemplate);
-							results.addAll(((PartList) webServiceObject).getResults());
+						results.addAll(partList.getResults());
+						log.info(partList.toString());
+						while (partList.getNext() != null) {
+							partList = webServiceObject.callNextPartList(partList.getNext());
+							results.addAll(partList.getResults());
+							log.info(partList.toString());
 						}
 
 						List<Part> parts = new ArrayList<Part>();
@@ -69,12 +72,12 @@ public class LegoScoreApplication {
 					case 4:
 						System.out.println("Enter Part Category: ");
 						input = scanner.next();
-						webServiceObject = new PartCategory().callRebrickable(input, restTemplate);
+						PartCategory partCategory = webServiceObject.callRebrickablePartCategotry(input);
+						log.info(partCategory.toString());
 						break;
 					case 0:
 						return;
 				}
-				log.info(webServiceObject.toString());
 			}
 		};
 	}

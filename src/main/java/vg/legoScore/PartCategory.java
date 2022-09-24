@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.web.client.RestTemplate;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PartCategory extends RebrickableWebService {
+public class PartCategory {
 
     private Long id;
     private String name;
@@ -23,13 +23,6 @@ public class PartCategory extends RebrickableWebService {
 
     public void setPart_count(Long part_count) {this.part_count = part_count;}
 
-    @Override
-    public PartCategory callRebrickable(String input, RestTemplate restTemplate) {
-        return restTemplate.getForObject(
-                "https://rebrickable.com/api/v3/lego/part_categories/" + input + "/?key=" + getKey(), PartCategory.class);
-    }
-
-    @Override
     public String toString() {
         return "PartCategory{" +
                 "id=" + id +

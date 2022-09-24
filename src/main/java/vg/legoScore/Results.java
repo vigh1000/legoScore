@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.web.client.RestTemplate;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Results extends RebrickableWebService {
+public class Results {
 
     private int id;
     private int quantity;
@@ -29,11 +29,6 @@ public class Results extends RebrickableWebService {
 
     public int getNum_sets() {return num_sets;}
     public void setNum_sets(int num_sets) {this.num_sets = num_sets;}
-
-    @Override
-    public RebrickableWebService callRebrickable(String input, RestTemplate restTemplate) {
-        return null;
-    }
 
     @Override
     public String toString() {
