@@ -26,61 +26,66 @@ public class LegoScoreApplication {
 	@Bean
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
 		return args -> {
-			RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate);
-			Scanner scanner = new Scanner(System.in);
-			String input;
-
-			while (true) {
-				switch (chooseOptionFromMenu()) {
-					case 1:
-						System.out.println("Enter part number: ");
-						input = scanner.next();
-						Part part = webServiceObject.callRebrickablePart(input);
-						log.info(part.toString());
-						break;
-					case 2:
-						System.out.println("Enter set number for set details: ");
-						input = scanner.next();
-						Set set = webServiceObject.callRebrickableSet(input);
-						log.info(set.toString());
-						break;
-					case 3:
-						System.out.println("Enter set number for part list: ");
-						input = scanner.next();
-						PartList partList = webServiceObject.callRebrickablePartList(input);
-
-						List<Results> results = new ArrayList<Results>();
-						results.addAll(partList.getResults());
-						log.info(partList.toString());
-						while (partList.getNext() != null) {
-							partList = webServiceObject.callNextPartList(partList.getNext());
-							results.addAll(partList.getResults());
-							log.info(partList.toString());
-						}
-
-						List<Part> parts = new ArrayList<Part>();
-						int totalParts = 0;
-						HashMap<Part,Long> partHashMap = new HashMap<Part, Long>();
-						for (Results result : results) {
-							parts.add(result.getPart());
-							totalParts += result.getQuantity();
-							partHashMap.put(result.getPart(),Long.valueOf(String.valueOf(result.getQuantity())));
-						}
-						log.info(parts.get(3).getName());
-						log.info(String.valueOf(totalParts));
-						break;
-					case 4:
-						System.out.println("Enter Part Category: ");
-						input = scanner.next();
-						PartCategory partCategory = webServiceObject.callRebrickablePartCategotry(input);
-						log.info(partCategory.toString());
-						break;
-					case 0:
-						return;
-				}
-			}
+			firstTry(restTemplate);
 		};
 	}
+
+	private static void firstTry(RestTemplate restTemplate) {
+		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate);
+		Scanner scanner = new Scanner(System.in);
+		String input;
+
+		while (true) {
+			switch (chooseOptionFromMenu()) {
+				case 1:
+					System.out.println("Enter part number: ");
+					input = scanner.next();
+					Part part = webServiceObject.callRebrickablePart(input);
+					log.info(part.toString());
+					break;
+				case 2:
+					System.out.println("Enter set number for set details: ");
+					input = scanner.next();
+					Set set = webServiceObject.callRebrickableSet(input);
+					log.info(set.toString());
+					break;
+				case 3:
+					System.out.println("Enter set number for part list: ");
+					input = scanner.next();
+					PartList partList = webServiceObject.callRebrickablePartList(input);
+
+					List<Results> results = new ArrayList<Results>();
+					results.addAll(partList.getResults());
+					log.info(partList.toString());
+					while (partList.getNext() != null) {
+						partList = webServiceObject.callNextPartList(partList.getNext());
+						results.addAll(partList.getResults());
+						log.info(partList.toString());
+					}
+
+					List<Part> parts = new ArrayList<Part>();
+					int totalParts = 0;
+					HashMap<Part,Long> partHashMap = new HashMap<Part, Long>();
+					for (Results result : results) {
+						parts.add(result.getPart());
+						totalParts += result.getQuantity();
+						partHashMap.put(result.getPart(),Long.valueOf(String.valueOf(result.getQuantity())));
+					}
+					log.info(parts.get(3).getName());
+					log.info(String.valueOf(totalParts));
+					break;
+				case 4:
+					System.out.println("Enter Part Category: ");
+					input = scanner.next();
+					PartCategory partCategory = webServiceObject.callRebrickablePartCategotry(input);
+					log.info(partCategory.toString());
+					break;
+				case 0:
+					return;
+			}
+		}
+	}
+
 	private static int chooseOptionFromMenu() {
 		System.out.println("Choose Option: ");
 		System.out.println("1. Part");

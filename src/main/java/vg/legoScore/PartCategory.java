@@ -23,6 +23,7 @@ public class PartCategory {
 
     public void setPart_count(Long part_count) {this.part_count = part_count;}
 
+    @Override
     public String toString() {
         return "PartCategory{" +
                 "id=" + id +

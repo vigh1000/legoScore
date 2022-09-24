@@ -22,6 +22,7 @@ public class Set {
     public Long getNum_parts() {return num_parts;}
     public void setNum_parts(Long num_parts) {this.num_parts = num_parts;}
 
+    @Override
     public String toString() {
         return "Set{" +
                 "set_num='" + set_num + '\'' +

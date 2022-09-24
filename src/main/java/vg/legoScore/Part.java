@@ -21,6 +21,8 @@ public class Part {
 
     public String getPart_cat_id() {return part_cat_id;}
     public void setPart_cat_id(String part_cat_id) {this.part_cat_id = part_cat_id;}
+
+    @Override
     public String toString() {
         return "Part{" +
                 "part_num='" + part_num + '\'' +
