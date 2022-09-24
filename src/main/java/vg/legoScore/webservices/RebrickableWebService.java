@@ -1,6 +1,10 @@
-package vg.legoScore;
+package vg.legoScore.webservices;
 
 import org.springframework.web.client.RestTemplate;
+import vg.legoScore.rebrickableObjects.Part;
+import vg.legoScore.rebrickableObjects.PartCategory;
+import vg.legoScore.rebrickableObjects.Set;
+import vg.legoScore.rebrickableObjects.SetParts;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,7 +15,7 @@ public class RebrickableWebService {
     private RestTemplate restTemplate = null;
     private final File keyFile = new File("C:\\temp\\RebrickableAPIkey.txt");
 
-    RebrickableWebService(RestTemplate restTemplate) {
+    public RebrickableWebService(RestTemplate restTemplate) {
         setKey(keyFile);
         setRestTemplate(restTemplate);
     }

@@ -1,7 +1,7 @@
-package vg.legoScore;
+package vg.legoScore.rebrickableObjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.web.client.RestTemplate;
+import vg.legoScore.rebrickableObjects.Part;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Results {

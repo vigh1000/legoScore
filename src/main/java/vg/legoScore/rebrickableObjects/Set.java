@@ -1,4 +1,4 @@
-package vg.legoScore;
+package vg.legoScore.rebrickableObjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
