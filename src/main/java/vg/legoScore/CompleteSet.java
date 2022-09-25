@@ -17,6 +17,7 @@ public class CompleteSet {
     private String legoSetNr;
     private String rebrickableSetNr;
     private int totalPartsQuantity;
+    private float ratioUniquePartsToTotalParts;
 
     public Set setDetails;
     public HashMap<Part,Long> setPartListQuantityMap = new HashMap<Part, Long>();
@@ -37,6 +38,7 @@ public class CompleteSet {
         setDetails = webServiceObject.callRebrickableSet(this.rebrickableSetNr);
 
         setSetPartListQuantityMap(webServiceObject);
+        setRatioUniquePartsToTotalParts();
     }
 
     private void setSetPartListQuantityMap(RebrickableWebService webServiceObject) {
@@ -74,4 +76,11 @@ public class CompleteSet {
     public int getTotalPartsQuantity() { return totalPartsQuantity;}
     public void setTotalPartsQuantity(int totalPartsQuantity) { this.totalPartsQuantity = totalPartsQuantity;}
     private void addToTotalPartsQuantity(int quantityToAdd) {totalPartsQuantity += quantityToAdd;}
+
+    public float getRatioUniquePartsToTotalParts() {
+        return ratioUniquePartsToTotalParts;
+    }
+    private void setRatioUniquePartsToTotalParts() {
+        this.ratioUniquePartsToTotalParts = setPartListQuantityMap.size() / (float)totalPartsQuantity;
+    }
 }

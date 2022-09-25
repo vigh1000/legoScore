@@ -40,6 +40,7 @@ public class LegoScoreApplication {
 				log.info(completeSet.setDetails.toString());
 				log.info("Total quantity from PartList: " + String.valueOf(completeSet.getTotalPartsQuantity()));
 				log.info("Total quantity from Set Details: " + completeSet.setDetails.getNum_parts().toString());
+				log.info("Ratio unique parts to total parts: " + String.valueOf(completeSet.getRatioUniquePartsToTotalParts()));
 			}
 		};
 	}
