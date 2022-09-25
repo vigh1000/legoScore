@@ -1,6 +1,8 @@
 package vg.legoScore.rebrickableObjects;
 
-public class Color {
+import org.jetbrains.annotations.NotNull;
+
+public class Color implements Comparable<Color> {
 
     private int id;
     private String name;
@@ -25,5 +27,21 @@ public class Color {
                 ", name=" + name +
                 ", is_trans=" + is_trans+
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NotNull Color o) {
+        return Integer.compare(id, o.getId());
+    }
+
+    @Override
+    public boolean equals(Object color) {
+        Color c = (Color) color;
+        return id==c.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }

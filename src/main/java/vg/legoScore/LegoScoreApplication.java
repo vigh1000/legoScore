@@ -41,6 +41,8 @@ public class LegoScoreApplication {
 				log.info("Total quantity from PartList: " + String.valueOf(completeSet.getTotalPartsQuantity()));
 				log.info("Total quantity from Set Details: " + completeSet.setDetails.getNum_parts().toString());
 				log.info("Ratio unique parts to total parts: " + String.valueOf(completeSet.getRatioUniquePartsToTotalParts()));
+				log.info("Color HashMap1 mit merge: " + String.valueOf(completeSet.setPartsPerColorMap.size()));
+				log.info("Done");
 			}
 		};
 	}

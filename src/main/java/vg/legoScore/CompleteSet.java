@@ -17,8 +17,8 @@ public class CompleteSet {
     private float ratioUniquePartsToTotalParts;
 
     public Set setDetails;
-    public HashMap<Part,Long> setPartListQuantityMap = new HashMap<Part, Long>();
-    public HashMap<Color, Long> setPartsPerColorMap = new HashMap<Color, Long>();
+    public HashMap<Part, Integer> setPartListQuantityMap = new HashMap<>();
+    public HashMap<Color, Integer> setPartsPerColorMap = new HashMap<>();
 
     public CompleteSet(RestTemplate restTemplate) {
 
@@ -46,8 +46,9 @@ public class CompleteSet {
             results.addAll(setPartList.getResults());
             for (Results result : results) {
                 addToTotalPartsQuantity(result.getQuantity());
-                setPartListQuantityMap.put(result.getPart(),Long.valueOf(String.valueOf(result.getQuantity())));
+                setPartListQuantityMap.put(result.getPart(),result.getQuantity());
 
+                setPartsPerColorMap.merge(result.getColor(), result.getQuantity(), Integer::sum);
             }
             if (setPartList.getNext() != null) setPartList = webServiceObject.callNextSetParts(setPartList.getNext());
             else break;
