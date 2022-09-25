@@ -29,19 +29,19 @@ public class LegoScoreApplication {
 	@Bean
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
 		return args -> {
-			firstTry(restTemplate);
+//			firstTry(restTemplate);
 
-//			Scanner scanner = new Scanner(System.in);
-//			while (true) {
-//				String input;
-//				System.out.println("Enter set number: ");
-//				input = scanner.next();
-//				CompleteSet completeSet = new CompleteSet(input, restTemplate);
-//				log.info(completeSet.setDetails.toString());
-//				log.info("Total quantity from PartList: " + String.valueOf(completeSet.getTotalPartsQuantity()));
-//				log.info("Total quantity from Set Details: " + completeSet.setDetails.getNum_parts().toString());
-//				log.info("Ratio unique parts to total parts: " + String.valueOf(completeSet.getRatioUniquePartsToTotalParts()));
-//			}
+			Scanner scanner = new Scanner(System.in);
+			while (true) {
+				String input;
+				System.out.println("Enter set number: ");
+				input = scanner.next();
+				CompleteSet completeSet = new CompleteSet(input, restTemplate);
+				log.info(completeSet.setDetails.toString());
+				log.info("Total quantity from PartList: " + String.valueOf(completeSet.getTotalPartsQuantity()));
+				log.info("Total quantity from Set Details: " + completeSet.setDetails.getNum_parts().toString());
+				log.info("Ratio unique parts to total parts: " + String.valueOf(completeSet.getRatioUniquePartsToTotalParts()));
+			}
 		};
 	}
 

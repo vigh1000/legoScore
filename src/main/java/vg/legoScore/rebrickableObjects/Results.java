@@ -10,6 +10,7 @@ public class Results {
     private boolean is_spare;
     private int num_sets;
     private Part part;
+    private Color color;
 
     public Results() {
     }
@@ -25,6 +26,9 @@ public class Results {
 
     public Part getPart() {return part;}
     public void setParts(Part part) {this.part = part;}
+
+    public Color getColor() {return color;}
+    public void setColor(Color color) {this.color = color;}
 
     public int getNum_sets() {return num_sets;}
     public void setNum_sets(int num_sets) {this.num_sets = num_sets;}

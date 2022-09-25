@@ -1,10 +1,7 @@
 package vg.legoScore;
 
 import org.springframework.web.client.RestTemplate;
-import vg.legoScore.rebrickableObjects.Part;
-import vg.legoScore.rebrickableObjects.Results;
-import vg.legoScore.rebrickableObjects.Set;
-import vg.legoScore.rebrickableObjects.SetPartList;
+import vg.legoScore.rebrickableObjects.*;
 import vg.legoScore.webservices.RebrickableWebService;
 
 import java.util.ArrayList;
@@ -21,6 +18,7 @@ public class CompleteSet {
 
     public Set setDetails;
     public HashMap<Part,Long> setPartListQuantityMap = new HashMap<Part, Long>();
+    public HashMap<Color, Long> setPartsPerColorMap = new HashMap<Color, Long>();
 
     public CompleteSet(RestTemplate restTemplate) {
 
@@ -49,6 +47,7 @@ public class CompleteSet {
             for (Results result : results) {
                 addToTotalPartsQuantity(result.getQuantity());
                 setPartListQuantityMap.put(result.getPart(),Long.valueOf(String.valueOf(result.getQuantity())));
+
             }
             if (setPartList.getNext() != null) setPartList = webServiceObject.callNextSetParts(setPartList.getNext());
             else break;
