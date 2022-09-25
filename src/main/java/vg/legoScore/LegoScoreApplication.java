@@ -29,19 +29,19 @@ public class LegoScoreApplication {
 	@Bean
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
 		return args -> {
-			//firstTry(restTemplate);
+			firstTry(restTemplate);
 
-			Scanner scanner = new Scanner(System.in);
-			while (true) {
-				String input;
-				System.out.println("Enter set number: ");
-				input = scanner.next();
-				CompleteSet completeSet = new CompleteSet(input, restTemplate);
-				log.info(completeSet.setDetails.toString());
-				log.info("Total quantity from PartList: " + String.valueOf(completeSet.getTotalPartsQuantity()));
-				log.info("Total quantity from Set Details: " + completeSet.setDetails.getNum_parts().toString());
-				log.info("Ratio unique parts to total parts: " + String.valueOf(completeSet.getRatioUniquePartsToTotalParts()));
-			}
+//			Scanner scanner = new Scanner(System.in);
+//			while (true) {
+//				String input;
+//				System.out.println("Enter set number: ");
+//				input = scanner.next();
+//				CompleteSet completeSet = new CompleteSet(input, restTemplate);
+//				log.info(completeSet.setDetails.toString());
+//				log.info("Total quantity from PartList: " + String.valueOf(completeSet.getTotalPartsQuantity()));
+//				log.info("Total quantity from Set Details: " + completeSet.setDetails.getNum_parts().toString());
+//				log.info("Ratio unique parts to total parts: " + String.valueOf(completeSet.getRatioUniquePartsToTotalParts()));
+//			}
 		};
 	}
 
@@ -95,6 +95,11 @@ public class LegoScoreApplication {
 					PartCategory partCategory = webServiceObject.callRebrickablePartCategory(input);
 					log.info(partCategory.toString());
 					break;
+				case 5:
+					System.out.println("Enter Color id: ");
+					input = scanner.next();
+					Color color = webServiceObject.callRebrickableColor(input);
+					log.info(color.toString());
 				case 0:
 					return;
 			}
@@ -107,6 +112,7 @@ public class LegoScoreApplication {
 		System.out.println("2. Set details");
 		System.out.println("3. Set part list");
 		System.out.println("4. PartCategory");
+		System.out.println("5. Color");
 		System.out.println("0. Exit");
 		Scanner scanner = new Scanner(System.in);
 		return scanner.nextInt();

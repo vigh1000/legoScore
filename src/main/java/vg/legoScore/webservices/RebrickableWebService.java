@@ -1,10 +1,7 @@
 package vg.legoScore.webservices;
 
 import org.springframework.web.client.RestTemplate;
-import vg.legoScore.rebrickableObjects.Part;
-import vg.legoScore.rebrickableObjects.PartCategory;
-import vg.legoScore.rebrickableObjects.Set;
-import vg.legoScore.rebrickableObjects.SetPartList;
+import vg.legoScore.rebrickableObjects.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -57,5 +54,10 @@ public class RebrickableWebService {
     public PartCategory callRebrickablePartCategory(String input) {
         return restTemplate.getForObject(
                 "https://rebrickable.com/api/v3/lego/part_categories/" + input + "/?key=" + getKey(), PartCategory.class);
+    }
+
+    public Color callRebrickableColor(String input) {
+        return restTemplate.getForObject(
+                "https://rebrickable.com/api/v3/lego/colors/" + input + "/?key=" + getKey(), Color.class);
     }
 }
