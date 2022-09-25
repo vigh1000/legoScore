@@ -19,6 +19,7 @@ public class CompleteSet {
     public Set setDetails;
     public HashMap<Part, Integer> setPartListQuantityMap = new HashMap<>();
     public HashMap<Color, Integer> setPartsPerColorMap = new HashMap<>();
+    public HashMap<String, Integer> setPartsPerCategoryMap = new HashMap<>();
 
     public CompleteSet(RestTemplate restTemplate) {
 
@@ -47,8 +48,10 @@ public class CompleteSet {
             for (Results result : results) {
                 addToTotalPartsQuantity(result.getQuantity());
                 setPartListQuantityMap.put(result.getPart(),result.getQuantity());
-
                 setPartsPerColorMap.merge(result.getColor(), result.getQuantity(), Integer::sum);
+                //TODO: Nicht nur die ID als String zur Map, sondern das ganze PartCategory Objekt
+                //      Dafür müssen wir uns wohl erstmal alle Kategorien holen.
+                setPartsPerCategoryMap.merge(result.getPart().getPart_cat_id(), result.getQuantity(), Integer::sum);
             }
             if (setPartList.getNext() != null) setPartList = webServiceObject.callNextSetParts(setPartList.getNext());
             else break;
