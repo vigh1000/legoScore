@@ -34,6 +34,7 @@ public class LegoScoreApplication {
 			RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate);
 			PartCategories allPartCategories = webServiceObject.callRebrickablePartCategories();
 			log.info(allPartCategories.toString());
+			log.info(allPartCategories.getPartCategoriesAsMap().toString());
 
 			Scanner scanner = new Scanner(System.in);
 			while (true) {
