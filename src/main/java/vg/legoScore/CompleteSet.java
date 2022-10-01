@@ -7,6 +7,7 @@ import vg.legoScore.webservices.RebrickableWebService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CompleteSet {
     private RestTemplate restTemplate;
@@ -49,8 +50,6 @@ public class CompleteSet {
                 addToTotalPartsQuantity(result.getQuantity());
                 setPartListQuantityMap.put(result.getPart(),result.getQuantity());
                 setPartsPerColorMap.merge(result.getColor(), result.getQuantity(), Integer::sum);
-                //TODO: Nicht nur die ID als String zur Map, sondern das ganze PartCategory Objekt
-                //      Dafür müssen wir uns wohl erstmal alle Kategorien holen.
                 setPartsPerCategoryMap.merge(result.getPart().getPart_cat_id(), result.getQuantity(), Integer::sum);
             }
             if (setPartList.getNext() != null) setPartList = webServiceObject.callNextSetParts(setPartList.getNext());
@@ -85,5 +84,14 @@ public class CompleteSet {
     }
     private void setRatioUniquePartsToTotalParts() {
         this.ratioUniquePartsToTotalParts = setPartListQuantityMap.size() / (float)totalPartsQuantity;
+    }
+
+    public HashMap<Long, Integer> getPartsPerCategoryMap () {
+        HashMap<Long, Integer> partsPerCategoryMap = new HashMap<>();
+
+        for (Map.Entry<String, Integer> entry : setPartsPerCategoryMap.entrySet()) {
+            partsPerCategoryMap.put(Long.valueOf(entry.getKey()), entry.getValue());
+        }
+        return partsPerCategoryMap;
     }
 }
