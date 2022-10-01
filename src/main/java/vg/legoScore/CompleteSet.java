@@ -16,11 +16,12 @@ public class CompleteSet {
     private String rebrickableSetNr;
     private int totalPartsQuantity;
     private float ratioUniquePartsToTotalParts;
+    private float totalLegoScore;
 
     public Set setDetails;
-    public HashMap<Part, Integer> setPartListQuantityMap = new HashMap<>();
-    public HashMap<Color, Integer> setPartsPerColorMap = new HashMap<>();
-    public HashMap<String, Integer> setPartsPerCategoryMap = new HashMap<>();
+    public HashMap<Part, Integer> partListQuantityMap = new HashMap<>();
+    public HashMap<Color, Integer> partsPerColorMap = new HashMap<>();
+    public HashMap<String, Integer> partsPerCategoryMap = new HashMap<>();
 
     public CompleteSet(RestTemplate restTemplate) {
 
@@ -37,20 +38,21 @@ public class CompleteSet {
         setLegoSetNr(rebrickableSetNr.substring(0,5));
         setDetails = webServiceObject.callRebrickableSet(this.rebrickableSetNr);
 
-        setSetPartListQuantityMap(webServiceObject);
+        setPartListQuantityMap(webServiceObject);
         setRatioUniquePartsToTotalParts();
+        setTotalLegoScore();
     }
 
-    private void setSetPartListQuantityMap(RebrickableWebService webServiceObject) {
+    private void setPartListQuantityMap(RebrickableWebService webServiceObject) {
         SetPartList setPartList = webServiceObject.callRebrickableSetParts(this.rebrickableSetNr);
         while (true) {
             List<Results> results = new ArrayList<Results>();
             results.addAll(setPartList.getResults());
             for (Results result : results) {
                 addToTotalPartsQuantity(result.getQuantity());
-                setPartListQuantityMap.put(result.getPart(),result.getQuantity());
-                setPartsPerColorMap.merge(result.getColor(), result.getQuantity(), Integer::sum);
-                setPartsPerCategoryMap.merge(result.getPart().getPart_cat_id(), result.getQuantity(), Integer::sum);
+                partListQuantityMap.put(result.getPart(),result.getQuantity());
+                partsPerColorMap.merge(result.getColor(), result.getQuantity(), Integer::sum);
+                partsPerCategoryMap.merge(result.getPart().getPart_cat_id(), result.getQuantity(), Integer::sum);
             }
             if (setPartList.getNext() != null) setPartList = webServiceObject.callNextSetParts(setPartList.getNext());
             else break;
@@ -83,15 +85,65 @@ public class CompleteSet {
         return ratioUniquePartsToTotalParts;
     }
     private void setRatioUniquePartsToTotalParts() {
-        this.ratioUniquePartsToTotalParts = setPartListQuantityMap.size() / (float)totalPartsQuantity;
+        this.ratioUniquePartsToTotalParts = partListQuantityMap.size() / (float)totalPartsQuantity;
+    }
+
+    public float getTotalLegoScore() {
+        return totalLegoScore;
+    }
+    public void setTotalLegoScore() {
+        for (Map.Entry<Part, Integer> partEntry : partListQuantityMap.entrySet()) {
+            String partName = partEntry.getKey().getName();
+
+            if (partName.contains(" x ")) {
+                String partWidth = partName.substring(partName.indexOf(" x ") - 1, partName.indexOf(" x "));
+                String partLength = partName.substring(partName.indexOf(" x ") + 3, partName.indexOf(" x ") + 4);
+
+                if (partWidth.matches("\\d") && partLength.matches("\\d")) {
+                    int partWidthInInt = Integer.parseInt(partWidth);
+                    int partLengthInInt = Integer.parseInt(partLength);
+                    int partScore = (partWidthInInt * partLengthInInt) * 2;
+                    totalLegoScore += partScore * partEntry.getValue();
+                }
+            }
+        }
+        totalLegoScore = totalLegoScore / totalPartsQuantity;
     }
 
     public HashMap<Long, Integer> getPartsPerCategoryMap () {
         HashMap<Long, Integer> partsPerCategoryMap = new HashMap<>();
 
-        for (Map.Entry<String, Integer> entry : setPartsPerCategoryMap.entrySet()) {
+        for (Map.Entry<String, Integer> entry : this.partsPerCategoryMap.entrySet()) {
             partsPerCategoryMap.put(Long.valueOf(entry.getKey()), entry.getValue());
         }
         return partsPerCategoryMap;
+    }
+
+    public HashMap<String, Integer> getPartsPerStudAreaMap() {
+        HashMap<String, Integer> partPerStudArea = new HashMap<>();
+
+        for (Map.Entry<Part, Integer> partEntry : partListQuantityMap.entrySet()) {
+            String partName = partEntry.getKey().getName();
+
+            if (partName.contains(" x ")) {
+                String partWidth = partName.substring(partName.indexOf(" x ") - 1, partName.indexOf(" x "));
+                String partLength = partName.substring(partName.indexOf(" x ") + 3, partName.indexOf(" x ") + 4);
+                partPerStudArea.merge(partWidth + " x " + partLength, partEntry.getValue(), Integer::sum);
+            }
+        }
+        return partPerStudArea;
+    }
+
+    public HashMap<String, Integer> getUnscoredPartsMap() {
+        HashMap<String, Integer> unscoredPartsMap = new HashMap<>();
+
+        for (Map.Entry<Part, Integer> partEntry : partListQuantityMap.entrySet()) {
+            String partName = partEntry.getKey().getName();
+
+            if (!partName.contains(" x ")) {
+                unscoredPartsMap.merge(partName, partEntry.getValue(), Integer::sum);
+            }
+        }
+        return unscoredPartsMap;
     }
 }
