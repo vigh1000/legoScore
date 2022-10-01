@@ -31,6 +31,10 @@ public class LegoScoreApplication {
 		return args -> {
 //			firstTry(restTemplate);
 
+			RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate);
+			PartCategories allPartCategories = webServiceObject.callRebrickablePartCategories();
+			log.info(allPartCategories.toString());
+
 			Scanner scanner = new Scanner(System.in);
 			while (true) {
 				String input;
