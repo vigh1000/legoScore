@@ -16,6 +16,10 @@ public class RebrickableWebService {
         setKey(keyFile);
         setRestTemplate(restTemplate);
     }
+    public RebrickableWebService(RestTemplate restTemplate, String key) {
+        this.key=key;
+        setRestTemplate(restTemplate);
+    }
 
     private String getKey() {return key;}
     private void setKey(File keyFile) {
