@@ -112,6 +112,9 @@ public class LegoScoreApplication {
 
 	@GetMapping("/cat")
 	public String cat(RestTemplate restTemplate) {
+		if (true) {
+			return "Ja klar...";
+		}
 		String returnString = restTemplate.getForObject(
 				"https://catfact.ninja/fact", String.class);
 		return returnString;
