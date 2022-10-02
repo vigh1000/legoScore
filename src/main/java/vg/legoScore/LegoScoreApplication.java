@@ -103,7 +103,7 @@ public class LegoScoreApplication {
 		return String.format("Hello %s!", name);
 	}
 	@GetMapping("/set2")
-	public String set2(@RequestParam(value = "setNr", defaultValue = "71761") String setNr, @RequestParam(value= "key") String key,RestTemplate restTemplate) {
+	public String set2(@RequestParam(value = "setNr", defaultValue = "71761") String setNr, @RequestParam(value= "key") String key, RestTemplate restTemplate) {
 		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate, key);
 		PartCategories allPartCategories = webServiceObject.callRebrickablePartCategories();
 		String returnString = allPartCategories.toString();
@@ -112,9 +112,6 @@ public class LegoScoreApplication {
 
 	@GetMapping("/cat")
 	public String cat(RestTemplate restTemplate) {
-		if (true) {
-			return "Ja klar...";
-		}
 		String returnString = restTemplate.getForObject(
 				"https://catfact.ninja/fact", String.class);
 		return returnString;
