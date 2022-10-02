@@ -23,17 +23,16 @@ public class CompleteSet {
     public HashMap<Color, Integer> partsPerColorMap = new HashMap<>();
     public HashMap<String, Integer> partsPerCategoryMap = new HashMap<>();
 
-    public CompleteSet(RestTemplate restTemplate) {
+    public CompleteSet(RebrickableWebService webServiceObject) {
 
     }
 
-    public CompleteSet(int legoSetNr, RestTemplate restTemplate) {
+    public CompleteSet(int legoSetNr, RebrickableWebService webServiceObject) {
         setLegoSetNr(String.valueOf(legoSetNr));
         setRebrickableSetNrViaLegoSetNr(this.legoSetNr);
     }
 
-    public CompleteSet(String rebrickableSetNr, RestTemplate restTemplate) {
-        RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate);
+    public CompleteSet(String rebrickableSetNr, RebrickableWebService webServiceObject) {
         setRebrickableSetNr(rebrickableSetNr);
         setLegoSetNr(rebrickableSetNr.substring(0,5));
         setDetails = webServiceObject.callRebrickableSet(this.rebrickableSetNr);
