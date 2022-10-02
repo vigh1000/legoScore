@@ -1,7 +1,5 @@
 package vg.legoScore.rebrickableObjects;
 
-import org.jetbrains.annotations.NotNull;
-
 public class Color implements Comparable<Color> {
 
     private int id;
@@ -30,7 +28,7 @@ public class Color implements Comparable<Color> {
     }
 
     @Override
-    public int compareTo(@NotNull Color o) {
+    public int compareTo(Color o) {
         return Integer.compare(id, o.getId());
     }
 

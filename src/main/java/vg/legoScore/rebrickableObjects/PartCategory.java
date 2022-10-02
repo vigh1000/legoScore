@@ -1,7 +1,6 @@
 package vg.legoScore.rebrickableObjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.jetbrains.annotations.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PartCategory implements Comparable<PartCategory> {
@@ -33,7 +32,7 @@ public class PartCategory implements Comparable<PartCategory> {
     }
 
     @Override
-    public int compareTo(@NotNull PartCategory o) {
+    public int compareTo(PartCategory o) {
         return id.compareTo(o.getId());
     }
 
