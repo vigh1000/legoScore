@@ -118,7 +118,6 @@ public class LegoScoreApplication {
 //			log.info(allPartCategories.toString());
 //			log.info(allPartCategories.getPartCategoriesAsMap().toString());
 
-			Scanner scanner = new Scanner(System.in);
 				String input = setNr;
 				if (input.length()==5) input = input + "-1";
 
