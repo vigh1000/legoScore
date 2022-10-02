@@ -7,6 +7,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import vg.legoScore.rebrickableObjects.*;
 import vg.legoScore.rebrickableObjects.Set;
@@ -15,6 +17,7 @@ import vg.legoScore.webservices.RebrickableWebService;
 import java.util.*;
 
 @SpringBootApplication
+@RestController
 public class LegoScoreApplication {
 
 	private static final Logger log = LoggerFactory.getLogger(LegoScoreApplication.class);
@@ -85,6 +88,11 @@ public class LegoScoreApplication {
 				log.info("Done");
 			}
 		};
+	}
+
+	@RequestMapping("/")
+	String sayHello() {
+		return "Hallo Spaaaaack";
 	}
 
 	private static void firstTry(RestTemplate restTemplate) {
