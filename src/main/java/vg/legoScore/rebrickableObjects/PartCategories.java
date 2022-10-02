@@ -36,7 +36,7 @@ public class PartCategories {
 
     @Override
     public String toString() {
-        return "PartList{" +
+        return "AllPartCategories{" +
                 "count='" + count + '\'' +
                 ", next='" + next + '\'' +
                 ", results=" + results.stream().count() +

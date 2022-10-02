@@ -98,12 +98,19 @@ public class LegoScoreApplication {
 		return "Hallo Spaaaaack";
 	}
 
-	@RequestMapping("/hello")
+	@GetMapping("/hello")
 	public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
 		return String.format("Hello %s!", name);
 	}
+	@GetMapping("/set2")
+	public String set2(@RequestParam(value = "setNr", defaultValue = "71761") String setNr, @RequestParam(value= "key") String key,RestTemplate restTemplate) {
+		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate, key);
+		PartCategories allPartCategories = webServiceObject.callRebrickablePartCategories();
+		String returnString = allPartCategories.toString();
+		return returnString;
+	}
 
-	@RequestMapping("/set")
+	@GetMapping("/set")
 	public String set(@RequestParam(value = "setNr", defaultValue = "71761") String setNr, @RequestParam(value= "key") String key,RestTemplate restTemplate) {
 
 		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate, key);
