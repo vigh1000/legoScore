@@ -10,12 +10,12 @@ import java.util.Scanner;
 public class RebrickableWebService {
     private String key;
     private RestTemplate restTemplate = null;
-    private final File keyFile = new File("C:\\temp\\RebrickableAPIkey.txt");
+    //private final File keyFile = new File("C:\\temp\\RebrickableAPIkey.txt");
 
-    public RebrickableWebService(RestTemplate restTemplate) {
-        setKey(keyFile);
-        setRestTemplate(restTemplate);
-    }
+//    public RebrickableWebService(RestTemplate restTemplate) {
+//        setKey(keyFile);
+//        setRestTemplate(restTemplate);
+//    }
     public RebrickableWebService(RestTemplate restTemplate, String key) {
         this.key=key;
         setRestTemplate(restTemplate);
