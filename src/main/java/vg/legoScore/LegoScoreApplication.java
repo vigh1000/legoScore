@@ -130,10 +130,10 @@ public class LegoScoreApplication {
 		if (input.length() == 5) input = input + "-1";
 
 		CompleteSet completeSet = new CompleteSet(input, webServiceObject);
-		returnList.add("SpaaaackScore: " + String.valueOf(completeSet.getTotalLegoScore()) + "\r");
-		returnList.add("Next Line");
-		
 		returnList.add(completeSet.setDetails.toString());
+		returnList.add("----------------------------------------");
+		returnList.add("SpaaaackScore: " + String.valueOf(completeSet.getTotalLegoScore()));
+
 		returnList.add("Total quantity from PartList: " + String.valueOf(completeSet.getTotalPartsQuantity()));
 		returnList.add("Total quantity from Set Details: " + completeSet.setDetails.getNum_parts().toString());
 		returnList.add("Ratio unique parts to total parts: " + String.valueOf(completeSet.getRatioUniquePartsToTotalParts()));
@@ -168,10 +168,9 @@ public class LegoScoreApplication {
 		}
 
 		returnList.add("----------------------------------------");
-		returnList.add("Spaaaaaaaack Score for this Set: " + completeSet.getTotalLegoScore());
 
 		returnList.add("Done");
-		return returnList.toString();
+		return returnList.toString().replaceAll(",","<br />");
 	}
 
 	private static void firstTry(RestTemplate restTemplate) {
