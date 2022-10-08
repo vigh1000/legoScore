@@ -118,56 +118,60 @@ public class LegoScoreApplication {
 	}
 
 	@GetMapping("/set")
-	public String set(@RequestParam(value = "setNr", defaultValue = "71761") String setNr, @RequestParam(value = "key") String key, RestTemplate restTemplate) {
+	public String set(@RequestParam(value = "setNr") String setNr, @RequestParam(value = "key") String key, RestTemplate restTemplate) {
+		if (setNr == null) return "Keine SetNummer angegeben";
+
+		ArrayList<String> returnList = new ArrayList<>();
 
 		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate, key);
 		PartCategories allPartCategories = webServiceObject.callRebrickablePartCategories();
-//			log.info(allPartCategories.toString());
-//			log.info(allPartCategories.getPartCategoriesAsMap().toString());
 
 		String input = setNr;
 		if (input.length() == 5) input = input + "-1";
 
 		CompleteSet completeSet = new CompleteSet(input, webServiceObject);
-		return String.valueOf(completeSet.getTotalLegoScore());
-////				log.info(completeSet.setDetails.toString());
-////				log.info("Total quantity from PartList: " + String.valueOf(completeSet.getTotalPartsQuantity()));
-////				log.info("Total quantity from Set Details: " + completeSet.setDetails.getNum_parts().toString());
-////				log.info("Ratio unique parts to total parts: " + String.valueOf(completeSet.getRatioUniquePartsToTotalParts()));
-//
-////				log.info("-----------------------------------------");
-////				log.info("Number of colors in this set: " + String.valueOf(completeSet.partsPerColorMap.size()));
-//
-//		for (Map.Entry<Color, Integer> colorEntry : completeSet.partsPerColorMap.entrySet()) {
-////					log.info("'" + colorEntry.getKey().getName() + "': " + colorEntry.getValue());
-//		}
-//
-////				log.info("----------------------------------------");
-////				log.info("Number of different part categories in this set: " + String.valueOf(completeSet.partsPerCategoryMap.size()));
-//
-//		for (Map.Entry<Long, Integer> categoryEntry : completeSet.getPartsPerCategoryMap().entrySet()) {
-////					log.info("'" + allPartCategories.getPartCategoriesAsMap().get(categoryEntry.getKey()) + "': " + categoryEntry.getValue());
-//		}
-//
-////				log.info("----------------------------------------");
-//		for (Map.Entry<Part, Integer> partEntry : completeSet.partListQuantityMap.entrySet()) {
-////					log.info("'" + partEntry.getKey().getName() + "': " + partEntry.getValue());
-//		}
-//
-////				log.info("----------------------------------------");
-//		for (Map.Entry<String, Integer> scoreCatEntry : completeSet.getPartsPerStudAreaMap().entrySet()) {
-////					log.info("'" + scoreCatEntry.getKey() + "': " + scoreCatEntry.getValue());
-//		}
-//
-////				log.info("----------------------------------------");
-//		for (Map.Entry<String, Integer> unscoredEntry : completeSet.getUnscoredPartsMap().entrySet()) {
-////					log.info("'" + unscoredEntry.getKey() + "': " + unscoredEntry.getValue());
-//		}
-//
-////				log.info("----------------------------------------");
-////				log.info("Spaaaaaaaack Score for this Set: " + completeSet.getTotalLegoScore());
-//
-////				log.info("Done");
+		returnList.add("SpaaaackScore: " + String.valueOf(completeSet.getTotalLegoScore()) + "\r");
+		returnList.add("Next Line");
+		
+		returnList.add(completeSet.setDetails.toString());
+		returnList.add("Total quantity from PartList: " + String.valueOf(completeSet.getTotalPartsQuantity()));
+		returnList.add("Total quantity from Set Details: " + completeSet.setDetails.getNum_parts().toString());
+		returnList.add("Ratio unique parts to total parts: " + String.valueOf(completeSet.getRatioUniquePartsToTotalParts()));
+
+		returnList.add("-----------------------------------------");
+		returnList.add("Number of colors in this set: " + String.valueOf(completeSet.partsPerColorMap.size()));
+
+		for (Map.Entry<Color, Integer> colorEntry : completeSet.partsPerColorMap.entrySet()) {
+			returnList.add("'" + colorEntry.getKey().getName() + "': " + colorEntry.getValue());
+		}
+
+		returnList.add("----------------------------------------");
+		returnList.add("Number of different part categories in this set: " + String.valueOf(completeSet.partsPerCategoryMap.size()));
+
+		for (Map.Entry<Long, Integer> categoryEntry : completeSet.getPartsPerCategoryMap().entrySet()) {
+			returnList.add("'" + allPartCategories.getPartCategoriesAsMap().get(categoryEntry.getKey()) + "': " + categoryEntry.getValue());
+		}
+
+		returnList.add("----------------------------------------");
+		for (Map.Entry<Part, Integer> partEntry : completeSet.partListQuantityMap.entrySet()) {
+			returnList.add("'" + partEntry.getKey().getName() + "': " + partEntry.getValue());
+		}
+
+		returnList.add("----------------------------------------");
+		for (Map.Entry<String, Integer> scoreCatEntry : completeSet.getPartsPerStudAreaMap().entrySet()) {
+			returnList.add("'" + scoreCatEntry.getKey() + "': " + scoreCatEntry.getValue());
+		}
+
+		returnList.add("----------------------------------------");
+		for (Map.Entry<String, Integer> unscoredEntry : completeSet.getUnscoredPartsMap().entrySet()) {
+			returnList.add("'" + unscoredEntry.getKey() + "': " + unscoredEntry.getValue());
+		}
+
+		returnList.add("----------------------------------------");
+		returnList.add("Spaaaaaaaack Score for this Set: " + completeSet.getTotalLegoScore());
+
+		returnList.add("Done");
+		return returnList.toString();
 	}
 
 	private static void firstTry(RestTemplate restTemplate) {
