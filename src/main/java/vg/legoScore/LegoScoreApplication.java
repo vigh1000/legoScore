@@ -1,5 +1,7 @@
 package vg.legoScore;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -102,6 +104,7 @@ public class LegoScoreApplication {
 	public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
 		return String.format("Hello %s!", name);
 	}
+
 	@GetMapping("/set2")
 	public String set2(@RequestParam(value = "setNr", defaultValue = "71761") String setNr, @RequestParam(value= "key") String key, RestTemplate restTemplate) {
 		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate, key);
@@ -117,11 +120,30 @@ public class LegoScoreApplication {
 		return returnString;
 	}
 
+	@GetMapping("/setJSON")
+	public String setJSON(@RequestParam(value = "setNr") String setNr, @RequestParam(value = "key") String key, RestTemplate restTemplate) throws JsonProcessingException {
+		if (setNr == null) return "Keine SetNummer angegeben";
+
+		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate, key);
+
+		String input = setNr;
+		if (input.length() == 5) input = input + "-1";
+
+		CompleteSet completeSet = new CompleteSet(input, webServiceObject);
+
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(completeSet);
+		return json;
+	}
+
+
+
 	@GetMapping("/set")
 	public String set(@RequestParam(value = "setNr") String setNr, @RequestParam(value = "key") String key, RestTemplate restTemplate) {
 		if (setNr == null) return "Keine SetNummer angegeben";
 
 		ArrayList<String> returnList = new ArrayList<>();
+		String nextLine = "..nextLine..";
 
 		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate, key);
 		PartCategories allPartCategories = webServiceObject.callRebrickablePartCategories();
@@ -130,47 +152,42 @@ public class LegoScoreApplication {
 		if (input.length() == 5) input = input + "-1";
 
 		CompleteSet completeSet = new CompleteSet(input, webServiceObject);
-		returnList.add(completeSet.setDetails.toString());
-		returnList.add("----------------------------------------");
-		returnList.add("SpaaaackScore: " + String.valueOf(completeSet.getTotalLegoScore()));
+		returnList.add(completeSet.setDetails.toString() + nextLine);
+		returnList.add("----------------------------------------" + nextLine);
+		returnList.add("SpaaaackScore: " + String.format("%.2f",completeSet.getTotalLegoScore()) + nextLine);
+		returnList.add("Ratio unique parts to total parts: " + String.format("%.2f", completeSet.getRatioUniquePartsToTotalParts()) + nextLine);
+		returnList.add("Total quantity including spare parts: " + String.valueOf(completeSet.getTotalPartsQuantity()) + nextLine);
 
-		returnList.add("Total quantity from PartList: " + String.valueOf(completeSet.getTotalPartsQuantity()));
-		returnList.add("Total quantity from Set Details: " + completeSet.setDetails.getNum_parts().toString());
-		returnList.add("Ratio unique parts to total parts: " + String.valueOf(completeSet.getRatioUniquePartsToTotalParts()));
-
-		returnList.add("-----------------------------------------");
-		returnList.add("Number of colors in this set: " + String.valueOf(completeSet.partsPerColorMap.size()));
-
-		for (Map.Entry<Color, Integer> colorEntry : completeSet.partsPerColorMap.entrySet()) {
-			returnList.add("'" + colorEntry.getKey().getName() + "': " + colorEntry.getValue());
-		}
-
-		returnList.add("----------------------------------------");
-		returnList.add("Number of different part categories in this set: " + String.valueOf(completeSet.partsPerCategoryMap.size()));
-
-		for (Map.Entry<Long, Integer> categoryEntry : completeSet.getPartsPerCategoryMap().entrySet()) {
-			returnList.add("'" + allPartCategories.getPartCategoriesAsMap().get(categoryEntry.getKey()) + "': " + categoryEntry.getValue());
-		}
-
-		returnList.add("----------------------------------------");
-		for (Map.Entry<Part, Integer> partEntry : completeSet.partListQuantityMap.entrySet()) {
-			returnList.add("'" + partEntry.getKey().getName() + "': " + partEntry.getValue());
-		}
-
-		returnList.add("----------------------------------------");
+		returnList.add("----------------------------------------" + nextLine);
+		returnList.add("List parts per StudArea" + nextLine);
 		for (Map.Entry<String, Integer> scoreCatEntry : completeSet.getPartsPerStudAreaMap().entrySet()) {
-			returnList.add("'" + scoreCatEntry.getKey() + "': " + scoreCatEntry.getValue());
+			if (scoreCatEntry.getKey().substring(0,1).matches("\\d")) {
+				returnList.add("'" + scoreCatEntry.getKey() + "': " + scoreCatEntry.getValue() + nextLine);
+			}
 		}
 
-		returnList.add("----------------------------------------");
+		returnList.add("-----------------------------------------" + nextLine);
+		returnList.add("Number of colors in this set: " + String.valueOf(completeSet.partsPerColorMap.size()) + nextLine);
+		for (Map.Entry<Color, Integer> colorEntry : completeSet.partsPerColorMap.entrySet()) {
+			returnList.add("'" + colorEntry.getKey().getName() + "': " + colorEntry.getValue() + nextLine);
+		}
+
+		returnList.add("----------------------------------------" + nextLine);
+		returnList.add("Number of different part categories in this set: " + String.valueOf(completeSet.partsPerCategoryMap.size()) + nextLine);
+		for (Map.Entry<Long, Integer> categoryEntry : completeSet.getPartsPerCategoryMap().entrySet()) {
+			returnList.add("'" + allPartCategories.getPartCategoriesAsMap().get(categoryEntry.getKey()) + "': " + categoryEntry.getValue() + nextLine);
+		}
+
+		returnList.add("----------------------------------------" + nextLine);
+		returnList.add("List unscored parts" + nextLine);
 		for (Map.Entry<String, Integer> unscoredEntry : completeSet.getUnscoredPartsMap().entrySet()) {
-			returnList.add("'" + unscoredEntry.getKey() + "': " + unscoredEntry.getValue());
+			returnList.add("'" + unscoredEntry.getKey() + "': " + unscoredEntry.getValue() + nextLine);
 		}
 
-		returnList.add("----------------------------------------");
+		returnList.add("----------------------------------------" + nextLine);
 
 		returnList.add("Done");
-		return returnList.toString().replaceAll(",","<br />");
+		return returnList.toString().replaceAll(nextLine + ", ","<br />");
 	}
 
 	private static void firstTry(RestTemplate restTemplate) {

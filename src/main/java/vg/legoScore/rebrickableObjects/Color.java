@@ -1,5 +1,8 @@
 package vg.legoScore.rebrickableObjects;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class Color implements Comparable<Color> {
 
     private int id;
@@ -18,13 +21,30 @@ public class Color implements Comparable<Color> {
     public boolean isIs_trans() {return is_trans;}
     public void setIs_trans(boolean is_trans) {this.is_trans = is_trans;}
 
+//    @Override
+//    public String toString() {
+//        return "\"Color\": {" +
+//                "\"id\"=" + id +
+//                ", name='" + name + '\'' +
+//                ", is_trans=" + is_trans +
+//                '}';
+//    }
+
+//    @Override
+//    public String toString() {
+//        ObjectMapper mapper = new ObjectMapper();
+//        String json = null;
+//        try {
+//            json = mapper.writeValueAsString(this);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return json;
+//    }
+
     @Override
     public String toString() {
-        return "Color{" +
-                "id=" + id +
-                ", name=" + name +
-                ", is_trans=" + is_trans+
-                '}';
+        return name;
     }
 
     @Override

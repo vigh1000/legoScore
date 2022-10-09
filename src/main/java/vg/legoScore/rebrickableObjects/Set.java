@@ -1,12 +1,14 @@
 package vg.legoScore.rebrickableObjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Set {
 
-    private String set_num;
     private String name;
+    private String set_num;
     private Long num_parts;
 
     public Set() {
@@ -21,12 +23,29 @@ public class Set {
     public Long getNum_parts() {return num_parts;}
     public void setNum_parts(Long num_parts) {this.num_parts = num_parts;}
 
+//    @Override
+//    public String toString() {
+//        ObjectMapper mapper = new ObjectMapper();
+//        String json = null;
+//        try {
+//            json = mapper.writeValueAsString(this);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return json;
+//    }
+
+//    @Override
+//    public String toString() {
+//        return "{" +
+//                "set_num='" + set_num + '\'' +
+//                ", name='" + name + '\'' +
+//                ", num_parts=" + num_parts +
+//                '}';
+//    }
+
     @Override
     public String toString() {
-        return "Set{" +
-                "set_num='" + set_num + '\'' +
-                ", name='" + name + '\'' +
-                ", num_parts=" + num_parts +
-                '}';
+        return name;
     }
 }

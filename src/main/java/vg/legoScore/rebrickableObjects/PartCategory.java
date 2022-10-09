@@ -1,6 +1,8 @@
 package vg.legoScore.rebrickableObjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PartCategory implements Comparable<PartCategory> {
@@ -22,13 +24,30 @@ public class PartCategory implements Comparable<PartCategory> {
 
     public void setPart_count(Long part_count) {this.part_count = part_count;}
 
+//    @Override
+//    public String toString() {
+//        return "PartCategory{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                ", part_count=" + part_count +
+//                '}';
+//    }
+
+//    @Override
+//    public String toString() {
+//        ObjectMapper mapper = new ObjectMapper();
+//        String json = null;
+//        try {
+//            json = mapper.writeValueAsString(this);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return json;
+//    }
+
     @Override
     public String toString() {
-        return "PartCategory{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", part_count=" + part_count +
-                '}';
+        return name;
     }
 
     @Override
