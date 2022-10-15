@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -19,6 +18,8 @@ import vg.legoScore.rebrickableObjects.Set;
 import vg.legoScore.webservices.RebrickableWebService;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SpringBootApplication
 @RestController
@@ -168,7 +169,11 @@ public class LegoScoreApplication {
 
 		returnList.add("-----------------------------------------" + nextLine);
 		returnList.add("Number of colors in this set: " + String.valueOf(completeSet.partsPerColorMap.size()) + nextLine);
-		for (Map.Entry<Color, Integer> colorEntry : completeSet.partsPerColorMap.entrySet()) {
+
+		LinkedHashMap<Color,Integer> streamResult = completeSet.partsPerColorMap.entrySet().stream()
+				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+		for (Map.Entry<Color, Integer> colorEntry : streamResult.entrySet()) {
 			returnList.add("'" + colorEntry.getKey().getName() + "': " + colorEntry.getValue() + nextLine);
 		}
 
