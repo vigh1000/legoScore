@@ -141,12 +141,17 @@ public class LegoScoreApplication {
 
 
 	@GetMapping("/set")
-	public String set(@RequestParam(value = "setNr") String setNr, @RequestParam(value = "key") String key, RestTemplate restTemplate) {
+	public String set(@RequestParam(value = "setNr") String setNr, @RequestParam(value = "key", required = false) String key, RestTemplate restTemplate) {
 		if (setNr == null) return "Keine SetNummer angegeben";
 
 		ArrayList<String> returnList = new ArrayList<>();
+		RebrickableWebService webServiceObject;
+		if (key==null) {
+			webServiceObject = new RebrickableWebService(restTemplate);
+		} else {
+			webServiceObject = new RebrickableWebService(restTemplate, key);
+		}
 
-		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate, key);
 		PartCategories allPartCategories = webServiceObject.callRebrickablePartCategories();
 
 		String input = setNr;
