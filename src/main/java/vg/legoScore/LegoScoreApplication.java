@@ -172,6 +172,10 @@ public class LegoScoreApplication {
 		returnList.addAll(getPartsPerCategorySortedByValue(completeSet.getPartsPerCategoryMap(), allPartCategories, completeSet.getTotalPartsQuantity()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
+		returnList.add("List potential parts with 3rd dimension:" +  getPartsWithPotentialThirdDimensionSortedByValue(completeSet.partListQuantityMap).size() + NEXT_LINE);
+		returnList.addAll(getPartsWithPotentialThirdDimensionSortedByValue(completeSet.partListQuantityMap));
+
+		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("List unscored parts" + NEXT_LINE);
 		for (Map.Entry<String, Integer> unscoredEntry : completeSet.getUnscoredPartsMap().entrySet()) {
 			returnList.add("'" + unscoredEntry.getKey() + "': " + unscoredEntry.getValue() + NEXT_LINE);
@@ -202,6 +206,14 @@ public class LegoScoreApplication {
 		return partsPerCategoryMap.entrySet().stream()
 				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
 				.map(entry -> allPartCategories.getPartCategoriesAsMap().get(entry.getKey()) + ": " + entry.getValue() + "......." + (int) (Float.valueOf(entry.getValue())/totalParts*100) + " %" + NEXT_LINE)
+				.collect(Collectors.toList());
+	}
+
+	private static List<String> getPartsWithPotentialThirdDimensionSortedByValue(HashMap<Part, Integer> partsQuantityMap) {
+		return partsQuantityMap.entrySet().stream()
+				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+				.filter(entry -> entry.getKey().getName().matches(".*( x .* x ).*"))
+				.map(entry -> entry.getKey().getName() + ": " + entry.getValue() + NEXT_LINE)
 				.collect(Collectors.toList());
 	}
 
