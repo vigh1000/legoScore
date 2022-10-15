@@ -138,8 +138,6 @@ public class LegoScoreApplication {
 		return json;
 	}
 
-
-
 	@GetMapping("/set")
 	public String set(@RequestParam(value = "setNr") String setNr, @RequestParam(value = "key", required = false) String key, RestTemplate restTemplate) {
 		if (setNr == null) return "Keine SetNummer angegeben";
