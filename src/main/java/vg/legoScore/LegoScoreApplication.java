@@ -96,7 +96,6 @@ public class LegoScoreApplication {
 //		};
 //	}
 
-
 	@RequestMapping("/")
 	String sayHello() {
 		return "Hallo Spaaaaack";
@@ -203,7 +202,6 @@ public class LegoScoreApplication {
 	private static List<String> getPartsPerStudAreaSortedByValue(HashMap<String, Integer> partPerStudAreaMap, int totalParts) {
 		return partPerStudAreaMap.entrySet().stream()
 				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-				.filter(entry -> entry.getKey().substring(0,1).matches("\\d"))
 				.map(entry -> entry.getKey() + ": " + entry.getValue() + "......." + (int) (Float.valueOf(entry.getValue())/totalParts*100) + " %" + NEXT_LINE)
 				.collect(Collectors.toList());
 	}
