@@ -108,8 +108,13 @@ public class LegoScoreApplication {
 	}
 
 	@GetMapping("/set2")
-	public String set2(@RequestParam(value = "setNr", defaultValue = "71761") String setNr, @RequestParam(value= "key") String key, RestTemplate restTemplate) {
-		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate, key);
+	public String set2(@RequestParam(value = "setNr", defaultValue = "71761") String setNr, @RequestParam(value= "key", required = false) String key, RestTemplate restTemplate) {
+		RebrickableWebService webServiceObject;
+		if (key==null) {
+			webServiceObject = new RebrickableWebService(restTemplate);
+		} else {
+			webServiceObject = new RebrickableWebService(restTemplate, key);
+		}
 		PartCategories allPartCategories = webServiceObject.callRebrickablePartCategories();
 		String returnString = allPartCategories.toString();
 		return returnString;
@@ -123,10 +128,15 @@ public class LegoScoreApplication {
 	}
 
 	@GetMapping("/setJSON")
-	public String setJSON(@RequestParam(value = "setNr") String setNr, @RequestParam(value = "key") String key, RestTemplate restTemplate) throws JsonProcessingException {
+	public String setJSON(@RequestParam(value = "setNr") String setNr, @RequestParam(value = "key", required = false) String key, RestTemplate restTemplate) throws JsonProcessingException {
 		if (setNr == null) return "Keine SetNummer angegeben";
 
-		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate, key);
+		RebrickableWebService webServiceObject;
+		if (key==null) {
+			webServiceObject = new RebrickableWebService(restTemplate);
+		} else {
+			webServiceObject = new RebrickableWebService(restTemplate, key);
+		}
 
 		String input = setNr;
 		if (input.length() == 5) input = input + "-1";
