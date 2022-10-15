@@ -19,13 +19,14 @@ import vg.legoScore.webservices.RebrickableWebService;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @SpringBootApplication
 @RestController
 public class LegoScoreApplication {
 
 	private static final Logger log = LoggerFactory.getLogger(LegoScoreApplication.class);
+
+	private static final String NEXT_LINE = "..nextLine..";
 
 	public static void main(String[] args) {SpringApplication.run(LegoScoreApplication.class, args);}
 
@@ -144,7 +145,6 @@ public class LegoScoreApplication {
 		if (setNr == null) return "Keine SetNummer angegeben";
 
 		ArrayList<String> returnList = new ArrayList<>();
-		String nextLine = "..nextLine..";
 
 		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate, key);
 		PartCategories allPartCategories = webServiceObject.callRebrickablePartCategories();
@@ -153,43 +153,52 @@ public class LegoScoreApplication {
 		if (input.length() == 5) input = input + "-1";
 
 		CompleteSet completeSet = new CompleteSet(input, webServiceObject);
-		returnList.add(completeSet.setDetails.toString() + nextLine);
-		returnList.add("----------------------------------------" + nextLine);
-		returnList.add("SpaaaackScore: " + String.format("%.2f",completeSet.getTotalLegoScore()) + nextLine);
-		returnList.add("Ratio unique parts to total parts: " + String.format("%.2f", completeSet.getRatioUniquePartsToTotalParts()) + nextLine);
-		returnList.add("Total quantity including spare parts: " + String.valueOf(completeSet.getTotalPartsQuantity()) + nextLine);
+		returnList.add(completeSet.setDetails.toString() + NEXT_LINE);
+		returnList.add("----------------------------------------" + NEXT_LINE);
+		returnList.add("SpaaaackScore: " + String.format("%.2f",completeSet.getTotalLegoScore()) + NEXT_LINE);
+		returnList.add("Ratio unique parts to total parts: " + String.format("%.2f", completeSet.getRatioUniquePartsToTotalParts()) + NEXT_LINE);
+		returnList.add("Total quantity including spare parts: " + String.valueOf(completeSet.getTotalPartsQuantity()) + NEXT_LINE);
 
-		returnList.add("----------------------------------------" + nextLine);
-		returnList.add("List parts per StudArea" + nextLine);
+		returnList.add("----------------------------------------" + NEXT_LINE);
+		returnList.add("List parts per StudArea" + NEXT_LINE);
 		for (Map.Entry<String, Integer> scoreCatEntry : completeSet.getPartsPerStudAreaMap().entrySet()) {
 			if (scoreCatEntry.getKey().substring(0,1).matches("\\d")) {
-				returnList.add("'" + scoreCatEntry.getKey() + "': " + scoreCatEntry.getValue() + nextLine);
+				returnList.add("'" + scoreCatEntry.getKey() + "': " + scoreCatEntry.getValue() + NEXT_LINE);
 			}
 		}
 
-		returnList.add("-----------------------------------------" + nextLine);
-		returnList.add("Number of colors in this set: " + String.valueOf(completeSet.partsPerColorMap.size()) + nextLine);
-		completeSet.partsPerColorMap.entrySet().stream()
-				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-				.map(colorIntegerEntry -> "'" + colorIntegerEntry.getKey().getName() + "': " + colorIntegerEntry.getValue() + nextLine)
-				.forEach(returnList::add);
+		returnList.add("-----------------------------------------" + NEXT_LINE);
+		returnList.add("Number of colors in this set: " + String.valueOf(completeSet.partsPerColorMap.size()) + NEXT_LINE);
+		returnList.addAll(getPartsPerColorSortedByValue(completeSet.partsPerColorMap));
 
-		returnList.add("----------------------------------------" + nextLine);
-		returnList.add("Number of different part categories in this set: " + String.valueOf(completeSet.partsPerCategoryMap.size()) + nextLine);
-		for (Map.Entry<Long, Integer> categoryEntry : completeSet.getPartsPerCategoryMap().entrySet()) {
-			returnList.add("'" + allPartCategories.getPartCategoriesAsMap().get(categoryEntry.getKey()) + "': " + categoryEntry.getValue() + nextLine);
-		}
+		returnList.add("----------------------------------------" + NEXT_LINE);
+		returnList.add("Number of different part categories in this set: " + String.valueOf(completeSet.partsPerCategoryMap.size()) + NEXT_LINE);
+		returnList.addAll(getPartsPerCategorySortedByValue(completeSet.getPartsPerCategoryMap(), allPartCategories));
 
-		returnList.add("----------------------------------------" + nextLine);
-		returnList.add("List unscored parts" + nextLine);
+		returnList.add("----------------------------------------" + NEXT_LINE);
+		returnList.add("List unscored parts" + NEXT_LINE);
 		for (Map.Entry<String, Integer> unscoredEntry : completeSet.getUnscoredPartsMap().entrySet()) {
-			returnList.add("'" + unscoredEntry.getKey() + "': " + unscoredEntry.getValue() + nextLine);
+			returnList.add("'" + unscoredEntry.getKey() + "': " + unscoredEntry.getValue() + NEXT_LINE);
 		}
 
-		returnList.add("----------------------------------------" + nextLine);
+		returnList.add("----------------------------------------" + NEXT_LINE);
 
 		returnList.add("Done");
-		return returnList.toString().replaceAll(nextLine + ", ","<br />");
+		return returnList.toString().replaceAll(NEXT_LINE + ", ","<br />");
+	}
+
+	private static List<String> getPartsPerColorSortedByValue(HashMap<Color, Integer> partsPerColorMap) {
+		return partsPerColorMap.entrySet().stream()
+				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+				.map(colorIntegerEntry -> "'" + colorIntegerEntry.getKey().getName() + "': " + colorIntegerEntry.getValue() + NEXT_LINE)
+				.collect(Collectors.toList());
+	}
+
+	private static List<String> getPartsPerCategorySortedByValue(HashMap<Long, Integer> partsPerCategoryMap, PartCategories allPartCategories) {
+		return partsPerCategoryMap.entrySet().stream()
+				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+				.map(categoryIntegerEntry -> "'" + allPartCategories.getPartCategoriesAsMap().get(categoryIntegerEntry.getKey()) + "': " + categoryIntegerEntry.getValue() + NEXT_LINE)
+				.collect(Collectors.toList());
 	}
 
 	private static void firstTry(RestTemplate restTemplate) {
