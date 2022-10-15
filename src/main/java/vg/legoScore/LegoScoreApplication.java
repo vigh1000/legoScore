@@ -169,13 +169,10 @@ public class LegoScoreApplication {
 
 		returnList.add("-----------------------------------------" + nextLine);
 		returnList.add("Number of colors in this set: " + String.valueOf(completeSet.partsPerColorMap.size()) + nextLine);
-
-		LinkedHashMap<Color,Integer> streamResult = completeSet.partsPerColorMap.entrySet().stream()
+		completeSet.partsPerColorMap.entrySet().stream()
 				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-		for (Map.Entry<Color, Integer> colorEntry : streamResult.entrySet()) {
-			returnList.add("'" + colorEntry.getKey().getName() + "': " + colorEntry.getValue() + nextLine);
-		}
+				.map(colorIntegerEntry -> "'" + colorIntegerEntry.getKey().getName() + "': " + colorIntegerEntry.getValue() + nextLine)
+				.forEach(returnList::add);
 
 		returnList.add("----------------------------------------" + nextLine);
 		returnList.add("Number of different part categories in this set: " + String.valueOf(completeSet.partsPerCategoryMap.size()) + nextLine);
