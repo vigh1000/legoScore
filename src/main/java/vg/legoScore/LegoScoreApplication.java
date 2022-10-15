@@ -169,11 +169,11 @@ public class LegoScoreApplication {
 
 		returnList.add("-----------------------------------------" + NEXT_LINE);
 		returnList.add("Number of colors in this set: " + String.valueOf(completeSet.partsPerColorMap.size()) + NEXT_LINE);
-		returnList.addAll(getPartsPerColorSortedByValue(completeSet.partsPerColorMap));
+		returnList.addAll(getPartsPerColorSortedByValue(completeSet.partsPerColorMap, completeSet.getTotalPartsQuantity()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("Number of different part categories in this set: " + String.valueOf(completeSet.partsPerCategoryMap.size()) + NEXT_LINE);
-		returnList.addAll(getPartsPerCategorySortedByValue(completeSet.getPartsPerCategoryMap(), allPartCategories));
+		returnList.addAll(getPartsPerCategorySortedByValue(completeSet.getPartsPerCategoryMap(), allPartCategories, completeSet.getTotalPartsQuantity()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("List unscored parts" + NEXT_LINE);
@@ -187,17 +187,17 @@ public class LegoScoreApplication {
 		return returnList.toString().replaceAll(NEXT_LINE + ", ","<br />");
 	}
 
-	private static List<String> getPartsPerColorSortedByValue(HashMap<Color, Integer> partsPerColorMap) {
+	private static List<String> getPartsPerColorSortedByValue(HashMap<Color, Integer> partsPerColorMap, int totalParts) {
 		return partsPerColorMap.entrySet().stream()
 				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-				.map(colorIntegerEntry -> "'" + colorIntegerEntry.getKey().getName() + "': " + colorIntegerEntry.getValue() + NEXT_LINE)
+				.map(colorIntegerEntry -> colorIntegerEntry.getKey().getName() + ": " + colorIntegerEntry.getValue() + "......." + (int) (Float.valueOf(colorIntegerEntry.getValue())/totalParts*100) + " %" +NEXT_LINE)
 				.collect(Collectors.toList());
 	}
 
-	private static List<String> getPartsPerCategorySortedByValue(HashMap<Long, Integer> partsPerCategoryMap, PartCategories allPartCategories) {
+	private static List<String> getPartsPerCategorySortedByValue(HashMap<Long, Integer> partsPerCategoryMap, PartCategories allPartCategories, int totalParts) {
 		return partsPerCategoryMap.entrySet().stream()
 				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-				.map(categoryIntegerEntry -> "'" + allPartCategories.getPartCategoriesAsMap().get(categoryIntegerEntry.getKey()) + "': " + categoryIntegerEntry.getValue() + NEXT_LINE)
+				.map(categoryIntegerEntry -> allPartCategories.getPartCategoriesAsMap().get(categoryIntegerEntry.getKey()) + ": " + categoryIntegerEntry.getValue() + "......." + (int) (Float.valueOf(categoryIntegerEntry.getValue())/totalParts*100) + " %" + NEXT_LINE)
 				.collect(Collectors.toList());
 	}
 
