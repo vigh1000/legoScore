@@ -71,4 +71,10 @@ public class RebrickableWebService {
         return restTemplate.getForObject(
                 "https://rebrickable.com/api/v3/lego/colors/" + input + "/?key=" + getKey(), Color.class);
     }
+
+    public UserSetList callRebrickableUserSetListViaListID(String userToken, String list_id) {
+        System.out.println("https://rebrickable.com/api/v3/users/" + userToken + "/setlists/" + list_id + "/sets" + "/?key=" + getKey());
+        return restTemplate.getForObject(
+                "https://rebrickable.com/api/v3/users/" + userToken + "/setlists/" + list_id + "/sets" + "/?key=" + getKey(), UserSetList.class);
+    }
 }

@@ -2,6 +2,7 @@ package vg.legoScore;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -124,6 +125,15 @@ public class LegoScoreApplication {
 		String returnString = restTemplate.getForObject(
 				"https://catfact.ninja/fact", String.class);
 		return returnString;
+	}
+
+	@GetMapping("/userSetList")
+	public String userSetList(@RequestParam(value= "userToken") String userToken, @RequestParam(value = "listID") String listID, RestTemplate restTemplate) throws JsonProcessingException {
+		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate);
+		UserSetList userSetList = webServiceObject.callRebrickableUserSetListViaListID(userToken,listID);
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(userSetList);
+		return json;
 	}
 
 	@GetMapping("/setJSON")
