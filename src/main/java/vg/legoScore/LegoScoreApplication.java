@@ -139,6 +139,7 @@ public class LegoScoreApplication {
 
 		String input = setNr;
 		if (input.length() == 5) input = input + "-1";
+		if (input.length() == 4) input = input + "-1";
 
 		CompleteSet completeSet = new CompleteSet(input, webServiceObject);
 
@@ -163,6 +164,7 @@ public class LegoScoreApplication {
 
 		String input = setNr;
 		if (input.length() == 5) input = input + "-1";
+		if (input.length() == 4) input = input + "-1";
 
 		CompleteSet completeSet = new CompleteSet(input, webServiceObject);
 		returnList.add(completeSet.setDetails.toString() + NEXT_LINE);

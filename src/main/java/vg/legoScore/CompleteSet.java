@@ -23,6 +23,7 @@ public class CompleteSet {
     public HashMap<Color, Integer> partsPerColorMap = new HashMap<>();
     public HashMap<String, Integer> partsPerCategoryMap = new HashMap<>();
     public HashMap<String, Integer> partsPerStudAreaMap = new HashMap<>();
+    public HashMap<String, Integer> unscoredPartsMap = new HashMap<>();
 
     public CompleteSet(RebrickableWebService webServiceObject) {
 
@@ -95,21 +96,27 @@ public class CompleteSet {
         for (Map.Entry<Part, Integer> partEntry : partListQuantityMap.entrySet()) {
             String partName = partEntry.getKey().getName();
             if (partEntry.getKey().getPart_cat_id().equalsIgnoreCase("29")) {
+                unscoredPartsMap.merge(partName, partEntry.getValue(), Integer::sum);
+                continue;
+            }
+            if (!partName.contains(" x ")) {
+                unscoredPartsMap.merge(partName, partEntry.getValue(), Integer::sum);
                 continue;
             }
 
-            if (partName.contains(" x ")) {
-                List<String> splitName = List.of(partName.split(" "));
-                String partWidth = splitName.get(splitName.indexOf("x") - 1);
-                String partLength = splitName.get(splitName.indexOf("x") + 1);
+            List<String> splitName = List.of(partName.split(" "));
+            String partWidth = splitName.get(splitName.indexOf("x") - 1);
+            String partLength = splitName.get(splitName.indexOf("x") + 1);
 
-                float partScore = (getMeasurementAsFloat(partWidth) * getMeasurementAsFloat(partLength)) * 2;
-                if (partScore != 0.0) {
-                    partsPerStudAreaMap.merge(partWidth + " x " + partLength, partEntry.getValue(), Integer::sum);
-                }
-                //System.out.println(totalLegoScore + " " + " " + partScore + " " + partWidthInFloat + " " + partLengthInFloat + " " + partEntry.getValue() + " "+ partName);
-                totalLegoScore += partScore * partEntry.getValue();
+            float partScore = (getMeasurementAsFloat(partWidth) * getMeasurementAsFloat(partLength)) * 2;
+            if (partScore != 0.0) {
+                partsPerStudAreaMap.merge(partWidth + " x " + partLength, partEntry.getValue(), Integer::sum);
+            } else {
+                unscoredPartsMap.merge(partName, partEntry.getValue(), Integer::sum);
             }
+            //System.out.println(totalLegoScore + " " + " " + partScore + " " + partWidthInFloat + " " + partLengthInFloat + " " + partEntry.getValue() + " "+ partName);
+            totalLegoScore += partScore * partEntry.getValue();
+
         }
         totalLegoScore = totalLegoScore / totalPartsQuantity;
     }
@@ -140,15 +147,6 @@ public class CompleteSet {
     }
 
     public HashMap<String, Integer> getUnscoredPartsMap() {
-        HashMap<String, Integer> unscoredPartsMap = new HashMap<>();
-
-        for (Map.Entry<Part, Integer> partEntry : partListQuantityMap.entrySet()) {
-            String partName = partEntry.getKey().getName();
-
-            if (!partName.contains(" x ")) {
-                unscoredPartsMap.merge(partName, partEntry.getValue(), Integer::sum);
-            }
-        }
         return unscoredPartsMap;
     }
 }
