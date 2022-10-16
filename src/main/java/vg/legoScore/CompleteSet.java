@@ -23,7 +23,7 @@ public class CompleteSet {
     public HashMap<Color, Integer> partsPerColorMap = new HashMap<>();
     public HashMap<String, Integer> partsPerCategoryMap = new HashMap<>();
     public HashMap<String, Integer> partsPerStudAreaMap = new HashMap<>();
-    public HashMap<String, Integer> unscoredPartsMap = new HashMap<>();
+    public HashMap<Part, Integer> unscoredPartsMap = new HashMap<>();
 
     public CompleteSet(RebrickableWebService webServiceObject) {
 
@@ -96,11 +96,11 @@ public class CompleteSet {
         for (Map.Entry<Part, Integer> partEntry : partListQuantityMap.entrySet()) {
             String partName = partEntry.getKey().getName();
             if (partEntry.getKey().getPart_cat_id().equalsIgnoreCase("29")) {
-                unscoredPartsMap.merge(partName, partEntry.getValue(), Integer::sum);
+                unscoredPartsMap.merge(partEntry.getKey(), partEntry.getValue(), Integer::sum);
                 continue;
             }
             if (!partName.contains(" x ")) {
-                unscoredPartsMap.merge(partName, partEntry.getValue(), Integer::sum);
+                unscoredPartsMap.merge(partEntry.getKey(), partEntry.getValue(), Integer::sum);
                 continue;
             }
 
@@ -112,7 +112,7 @@ public class CompleteSet {
             if (partScore != 0.0) {
                 partsPerStudAreaMap.merge(partWidth + " x " + partLength, partEntry.getValue(), Integer::sum);
             } else {
-                unscoredPartsMap.merge(partName, partEntry.getValue(), Integer::sum);
+                unscoredPartsMap.merge(partEntry.getKey(), partEntry.getValue(), Integer::sum);
             }
             //System.out.println(totalLegoScore + " " + " " + partScore + " " + partWidthInFloat + " " + partLengthInFloat + " " + partEntry.getValue() + " "+ partName);
             totalLegoScore += partScore * partEntry.getValue();
@@ -146,7 +146,7 @@ public class CompleteSet {
         return partsPerStudAreaMap;
     }
 
-    public HashMap<String, Integer> getUnscoredPartsMap() {
+    public HashMap<Part, Integer> getUnscoredPartsMap() {
         return unscoredPartsMap;
     }
 }

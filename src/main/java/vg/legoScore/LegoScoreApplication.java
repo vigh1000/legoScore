@@ -191,12 +191,9 @@ public class LegoScoreApplication {
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("List unscored parts" + NEXT_LINE);
-		for (Map.Entry<String, Integer> unscoredEntry : completeSet.getUnscoredPartsMap().entrySet()) {
-			returnList.add("'" + unscoredEntry.getKey() + "': " + unscoredEntry.getValue() + NEXT_LINE);
-		}
+		returnList.addAll(getUnscoredPartsSortedByValue(completeSet.getUnscoredPartsMap()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
-
 		returnList.add("Done");
 		return returnList.toString().replaceAll(NEXT_LINE + ", ","<br />");
 	}
@@ -226,6 +223,13 @@ public class LegoScoreApplication {
 		return partsQuantityMap.entrySet().stream()
 				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
 				.filter(entry -> entry.getKey().getName().matches(".*( x .* x ).*"))
+				.map(entry -> entry.getKey().getName() + ": " + entry.getValue() + NEXT_LINE)
+				.collect(Collectors.toList());
+	}
+
+	private static List<String> getUnscoredPartsSortedByValue(HashMap<Part, Integer> unscoredPartsMap) {
+		return unscoredPartsMap.entrySet().stream()
+				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
 				.map(entry -> entry.getKey().getName() + ": " + entry.getValue() + NEXT_LINE)
 				.collect(Collectors.toList());
 	}
