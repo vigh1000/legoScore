@@ -270,7 +270,7 @@ public class LegoScoreApplication {
 		List<CompleteSet> completeSetList = new ArrayList<>();
 		for (String entry : setNumbers) {
 			try {
-				TimeUnit.SECONDS.sleep(3);
+				TimeUnit.SECONDS.sleep(5);
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}
