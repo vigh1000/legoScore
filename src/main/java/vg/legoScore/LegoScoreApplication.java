@@ -2,7 +2,6 @@ package vg.legoScore;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -19,6 +18,7 @@ import vg.legoScore.rebrickableObjects.Set;
 import vg.legoScore.webservices.RebrickableWebService;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @SpringBootApplication
@@ -130,10 +130,31 @@ public class LegoScoreApplication {
 	@GetMapping("/userSetList")
 	public String userSetList(@RequestParam(value= "userToken") String userToken, @RequestParam(value = "listID") String listID, RestTemplate restTemplate) throws JsonProcessingException {
 		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate);
-		UserSetList userSetList = webServiceObject.callRebrickableUserSetListViaListID(userToken,listID);
+		List<String> setNumbers = getSetNumbersFromUserList(userToken, listID, webServiceObject);
+
+		List<CompleteSet> completeSetList = getCompleteSetsList(webServiceObject, setNumbers);
+
+		//TODO:
+		// - CompleteSets ausgeben
+
 		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(userSetList);
+		String json = mapper.writeValueAsString(completeSetList);
 		return json;
+
+		//return String.valueOf(completeSetList.size());
+	}
+
+	@GetMapping("/userSetListJSON")
+	public String userSetListJSON(@RequestParam(value= "userToken") String userToken, @RequestParam(value = "listID") String listID, RestTemplate restTemplate) throws JsonProcessingException {
+		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate);
+		List<String> setNumbers = getSetNumbersFromUserList(listID, userToken, webServiceObject);
+
+		List<CompleteSet> completeSetList = getCompleteSetsList(webServiceObject, setNumbers);
+
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(completeSetList);
+		return json;
+
 	}
 
 	@GetMapping("/setJSON")
@@ -241,6 +262,33 @@ public class LegoScoreApplication {
 		return unscoredPartsMap.entrySet().stream()
 				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
 				.map(entry -> entry.getKey().getName() + ": " + entry.getValue() + NEXT_LINE)
+				.collect(Collectors.toList());
+	}
+
+
+	private static List<CompleteSet> getCompleteSetsList(RebrickableWebService webServiceObject, List<String> setNumbers) {
+		List<CompleteSet> completeSetList = new ArrayList<>();
+		for (String entry : setNumbers) {
+			try {
+				TimeUnit.SECONDS.sleep(3);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+			CompleteSet completeSet = new CompleteSet(entry, webServiceObject);
+			completeSetList.add(completeSet);
+		}
+		return completeSetList;
+	}
+
+	private static UserSetList getUserSetList(String userToken, String listID, RebrickableWebService webServiceObject) {
+		UserSetList userSetList = webServiceObject.callRebrickableUserSetListViaListID(userToken, listID);
+		return userSetList;
+	}
+
+	private static List<String> getSetNumbersFromUserList(String listID, String userToken, RebrickableWebService webServiceObject) {
+		UserSetList userSetList = getUserSetList(userToken, listID, webServiceObject);
+		return userSetList.getResults().stream()
+				.map(entry -> entry.getSet().getSet_num())
 				.collect(Collectors.toList());
 	}
 
