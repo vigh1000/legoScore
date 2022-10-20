@@ -130,16 +130,24 @@ public class LegoScoreApplication {
 	@GetMapping("/userSetList")
 	public String userSetList(@RequestParam(value= "userToken") String userToken, @RequestParam(value = "listID") String listID, RestTemplate restTemplate) throws JsonProcessingException {
 		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate);
-		List<String> setNumbers = getSetNumbersFromUserList(userToken, listID, webServiceObject);
+		List<String> setNumbers = getSetNumbersFromUserList(listID, userToken, webServiceObject);
 
 		List<CompleteSet> completeSetList = getCompleteSetsList(webServiceObject, setNumbers);
 
-		//TODO:
-		// - CompleteSets ausgeben
+		ArrayList<String> returnList = new ArrayList<>();
+		for (CompleteSet completeSet : completeSetList) {
+			returnList.add(completeSet.setDetails.toString() + NEXT_LINE);
+			returnList.add("----------------------------------------" + NEXT_LINE);
+			returnList.add("SpaaaackScore: " + String.format("%.2f",completeSet.getTotalLegoScore()) + NEXT_LINE);
+			returnList.add("Ratio unique parts to total parts: " + String.format("%.2f", completeSet.getRatioUniquePartsToTotalParts()) + NEXT_LINE);
+			returnList.add("Total quantity including spare parts: " + String.valueOf(completeSet.getTotalPartsQuantity()) + NEXT_LINE);
+			returnList.add("Number of colors in this set: " + String.valueOf(completeSet.partsPerColorMap.size()) + NEXT_LINE);
+			returnList.add("Number of different part categories in this set: " + String.valueOf(completeSet.partsPerCategoryMap.size()) + NEXT_LINE);
+			returnList.add("----------------------------------------" + NEXT_LINE);
+		}
+		returnList.add("Done");
 
-		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(completeSetList);
-		return json;
+		return returnList.toString().replaceAll(NEXT_LINE + ", ","<br />");
 
 		//return String.valueOf(completeSetList.size());
 	}
@@ -217,7 +225,7 @@ public class LegoScoreApplication {
 		returnList.addAll(getPartsPerCategorySortedByValue(completeSet.getPartsPerCategoryMap(), allPartCategories, completeSet.getTotalPartsQuantity()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
-		returnList.add("List potential parts with 3rd dimension:" +  getPartsWithPotentialThirdDimensionSortedByValue(completeSet.partListQuantityMap).size() + NEXT_LINE);
+		returnList.add("List potential parts with 3rd dimension: " + NEXT_LINE);
 		returnList.addAll(getPartsWithPotentialThirdDimensionSortedByValue(completeSet.partListQuantityMap));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
