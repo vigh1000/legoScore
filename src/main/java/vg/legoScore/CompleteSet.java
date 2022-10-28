@@ -2,12 +2,10 @@ package vg.legoScore;
 
 import org.springframework.web.client.RestTemplate;
 import vg.legoScore.rebrickableObjects.*;
+import vg.legoScore.rebrickableObjects.Set;
 import vg.legoScore.webservices.RebrickableWebService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CompleteSet {
     private RestTemplate restTemplate;
@@ -17,6 +15,7 @@ public class CompleteSet {
     private int totalPartsQuantity;
     private float ratioUniquePartsToTotalParts;
     private float totalLegoScore;
+    private float totalLegoScore2;
 
     public Set setDetails;
     public HashMap<Part, Integer> partListQuantityMap = new HashMap<>();
@@ -24,9 +23,15 @@ public class CompleteSet {
     public HashMap<String, Integer> partsPerCategoryMap = new HashMap<>();
     public HashMap<String, Integer> partsPerStudAreaMap = new HashMap<>();
     public HashMap<Part, Integer> unscoredPartsMap = new HashMap<>();
+    public HashMap<Integer, Integer> partsPerStudAreaCategoryMap = new HashMap<>();
+
+    // Product of StudArea for each Category
+    public List<Integer> studAreaCategoryList = List.of(2,5,10,30,9999999);
+    // Value of Category for Score2
+    public List<Integer> studAreaValueList = List.of(1,3,8,18,40);
+
 
     public CompleteSet(RebrickableWebService webServiceObject) {
-
     }
 
     public CompleteSet(int legoSetNr, RebrickableWebService webServiceObject) {
@@ -42,6 +47,7 @@ public class CompleteSet {
         setPartListQuantityMap(webServiceObject);
         setRatioUniquePartsToTotalParts();
         setTotalLegoScore();
+        setTotalLegoScore2();
     }
 
     private void setPartListQuantityMap(RebrickableWebService webServiceObject) {
@@ -111,14 +117,31 @@ public class CompleteSet {
             float partScore = (getMeasurementAsFloat(partWidth) * getMeasurementAsFloat(partLength)) * 2;
             if (partScore != 0.0) {
                 partsPerStudAreaMap.merge(partWidth + " x " + partLength, partEntry.getValue(), Integer::sum);
+
+                for (int i = 0; i < studAreaCategoryList.size(); i++) {
+                    if ((partScore/2) <= studAreaCategoryList.get(i)) {
+                        partsPerStudAreaCategoryMap.merge(i, partEntry.getValue(), Integer::sum);
+                        break;
+                    }
+                }
+
             } else {
                 unscoredPartsMap.merge(partEntry.getKey(), partEntry.getValue(), Integer::sum);
             }
             //System.out.println(totalLegoScore + " " + " " + partScore + " " + partWidthInFloat + " " + partLengthInFloat + " " + partEntry.getValue() + " "+ partName);
             totalLegoScore += partScore * partEntry.getValue();
-
         }
         totalLegoScore = totalLegoScore / totalPartsQuantity;
+    }
+
+    public float getTotalLegoScore2() {
+        return totalLegoScore2;
+    }
+    private void setTotalLegoScore2() {
+        for (Map.Entry<Integer, Integer> studAreaCategoryEntry : partsPerStudAreaCategoryMap.entrySet()) {
+            totalLegoScore2 += studAreaValueList.get(studAreaCategoryEntry.getKey()) * studAreaCategoryEntry.getValue();
+        }
+        totalLegoScore2 = totalLegoScore2 / totalPartsQuantity;
     }
 
     private Float getMeasurementAsFloat(String measurementAsString) {
@@ -148,5 +171,9 @@ public class CompleteSet {
 
     public HashMap<Part, Integer> getUnscoredPartsMap() {
         return unscoredPartsMap;
+    }
+
+    public HashMap<Integer, Integer> getPartsPerStudAreaCategoryMap() {
+        return partsPerStudAreaCategoryMap;
     }
 }

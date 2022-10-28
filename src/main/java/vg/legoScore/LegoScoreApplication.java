@@ -139,6 +139,7 @@ public class LegoScoreApplication {
 			returnList.add(completeSet.setDetails.toString() + NEXT_LINE);
 			returnList.add("----------------------------------------" + NEXT_LINE);
 			returnList.add("SpaaaackScore: " + String.format("%.2f",completeSet.getTotalLegoScore()) + NEXT_LINE);
+			returnList.add("SpaaaackScore2: " + String.format("%.2f",completeSet.getTotalLegoScore2()) + NEXT_LINE);
 			returnList.add("Ratio unique parts to total parts: " + String.format("%.2f", completeSet.getRatioUniquePartsToTotalParts()) + NEXT_LINE);
 			returnList.add("Total quantity including spare parts: " + String.valueOf(completeSet.getTotalPartsQuantity()) + NEXT_LINE);
 			returnList.add("Number of colors in this set: " + String.valueOf(completeSet.partsPerColorMap.size()) + NEXT_LINE);
@@ -209,12 +210,17 @@ public class LegoScoreApplication {
 		returnList.add(completeSet.setDetails.toString() + NEXT_LINE);
 		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("SpaaaackScore: " + String.format("%.2f",completeSet.getTotalLegoScore()) + NEXT_LINE);
+		returnList.add("SpaaaackScore2: " + String.format("%.2f",completeSet.getTotalLegoScore2()) + NEXT_LINE);
 		returnList.add("Ratio unique parts to total parts: " + String.format("%.2f", completeSet.getRatioUniquePartsToTotalParts()) + NEXT_LINE);
 		returnList.add("Total quantity including spare parts: " + String.valueOf(completeSet.getTotalPartsQuantity()) + NEXT_LINE);
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("List parts per StudArea" + NEXT_LINE);
 		returnList.addAll(getPartsPerStudAreaSortedByValue(completeSet.getPartsPerStudAreaMap(), completeSet.getTotalPartsQuantity()));
+
+		returnList.add("----------------------------------------" + NEXT_LINE);
+		returnList.add("List parts per StudAreaCategory" + NEXT_LINE);
+		returnList.addAll(getPartsPerStudAreaCategorySortedByKey(completeSet.getPartsPerStudAreaCategoryMap(), completeSet.getTotalPartsQuantity()));
 
 		returnList.add("-----------------------------------------" + NEXT_LINE);
 		returnList.add("Number of colors in this set: " + String.valueOf(completeSet.partsPerColorMap.size()) + NEXT_LINE);
@@ -235,6 +241,12 @@ public class LegoScoreApplication {
 		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("Done");
 		return returnList.toString().replaceAll(NEXT_LINE + ", ","<br />");
+	}
+
+	private Collection<String> getPartsPerStudAreaCategorySortedByKey(HashMap<Integer, Integer> partsPerStudAreaCategoryMap, int totalParts) {
+		return partsPerStudAreaCategoryMap.entrySet().stream()
+				.map(entry -> entry.getKey() + ": " + entry.getValue() + "......" + (int) (Float.valueOf(entry.getValue())/totalParts*100) + " %" + NEXT_LINE)
+				.collect(Collectors.toList());
 	}
 
 	private static List<String> getPartsPerStudAreaSortedByValue(HashMap<String, Integer> partPerStudAreaMap, int totalParts) {
