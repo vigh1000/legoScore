@@ -215,11 +215,11 @@ public class LegoScoreApplication {
 		returnList.add("Total quantity including spare parts: " + String.valueOf(completeSet.getTotalPartsQuantity()) + NEXT_LINE);
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
-		returnList.add("List parts per StudArea" + NEXT_LINE);
+		returnList.add("List parts per StudArea: " + getAmountForThisMap(completeSet.getPartsPerStudAreaMap().values()) +  NEXT_LINE);
 		returnList.addAll(getPartsPerStudAreaSortedByValue(completeSet.getPartsPerStudAreaMap(), completeSet.getTotalPartsQuantity()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
-		returnList.add("List parts per StudAreaCategory" + NEXT_LINE);
+		returnList.add("List parts per StudAreaCategory: " + getAmountForThisMap(completeSet.getPartsPerStudAreaCategoryMap().values()) + NEXT_LINE);
 		returnList.addAll(getPartsPerStudAreaCategorySortedByKey(completeSet.getPartsPerStudAreaCategoryMap(), completeSet.getTotalPartsQuantity()));
 
 		returnList.add("-----------------------------------------" + NEXT_LINE);
@@ -231,16 +231,31 @@ public class LegoScoreApplication {
 		returnList.addAll(getPartsPerCategorySortedByValue(completeSet.getPartsPerCategoryMap(), allPartCategories, completeSet.getTotalPartsQuantity()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
-		returnList.add("List potential parts with 3rd dimension: " + NEXT_LINE);
+		returnList.add("List potential parts with 3rd dimension: " + getAmountForThisMap(completeSet.partListQuantityMap) + NEXT_LINE);
 		returnList.addAll(getPartsWithPotentialThirdDimensionSortedByValue(completeSet.partListQuantityMap));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
-		returnList.add("List unscored parts" + NEXT_LINE);
+		returnList.add("List unscored parts: " + getAmountForThisMap(completeSet.getUnscoredPartsMap().values()) + NEXT_LINE);
 		returnList.addAll(getUnscoredPartsSortedByValue(completeSet.getUnscoredPartsMap()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("Done");
 		return returnList.toString().replaceAll(NEXT_LINE + ", ","<br />");
+	}
+
+	private Integer getAmountForThisMap(Collection<Integer> valuesForThisMap) {
+		return valuesForThisMap.stream()
+				.mapToInt(Integer::intValue).sum();
+
+//		return valuesForThisMap.values().stream()
+//				.reduce(0, Integer::sum);
+	}
+
+	private Integer getAmountForThisMap(HashMap<Part, Integer> map) {
+		return map.entrySet().stream()
+				.filter(entry -> entry.getKey().getName().matches(".*( x .* x ).*"))
+				.map(Map.Entry::getValue)
+				.mapToInt(Integer::intValue).sum();
 	}
 
 	private Collection<String> getPartsPerStudAreaCategorySortedByKey(HashMap<Integer, Integer> partsPerStudAreaCategoryMap, int totalParts) {
