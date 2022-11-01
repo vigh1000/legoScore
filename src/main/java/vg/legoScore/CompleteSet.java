@@ -161,8 +161,6 @@ public class CompleteSet {
     }
     private void setTotalLegoScore3() {
         totalLegoScore3 = partsPerStudAreaCategoryMap.get(0);
-        System.out.println("totalLegoScore3: " + totalLegoScore3);
-
         Float totalLegoScoreTemp = 0f;
         totalLegoScoreTemp += partsPerStudAreaMap.entrySet().stream()
                 .filter(entry -> !entry.getKey().matches("^(1 x 1|1 x 2|2 x 1)"))
