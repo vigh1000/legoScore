@@ -233,12 +233,12 @@ public class LegoScoreApplication {
 		returnList.addAll(getPartsPerCategorySortedByValue(completeSet.getPartsPerCategoryMap(), allPartCategories, completeSet.getTotalPartsQuantity()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
-		returnList.add("List potential parts with 3rd dimension: " + getAmountForThisMap(completeSet.getPartListQuantityMap()) + NEXT_LINE);
-		returnList.addAll(getPartsWithPotentialThirdDimensionSortedByValue(completeSet.getPartListQuantityMap()));
+		returnList.add("List potential parts with 3rd dimension: " + getAmountForThisMap(completeSet.getPartsWithPotentialThirdDimension().values()) + NEXT_LINE);
+		returnList.addAll(getListOfSomePartSetSortedByValue(completeSet.getPartsWithPotentialThirdDimension()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("List unscored parts: " + getAmountForThisMap(completeSet.getUnscoredPartsMap().values()) + NEXT_LINE);
-		returnList.addAll(getUnscoredPartsSortedByValue(completeSet.getUnscoredPartsMap()));
+		returnList.addAll(getListOfSomePartSetSortedByValue(completeSet.getUnscoredPartsMap()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("Done");
@@ -287,20 +287,19 @@ public class LegoScoreApplication {
 				.collect(Collectors.toList());
 	}
 
-	private static List<String> getPartsWithPotentialThirdDimensionSortedByValue(HashMap<Part, Integer> partsQuantityMap) {
+	private static List<String> getListOfSomePartSetSortedByValue(Map<Part, Integer> partsQuantityMap) {
 		return partsQuantityMap.entrySet().stream()
 				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-				.filter(entry -> entry.getKey().getName().matches(".*( x .* x ).*"))
 				.map(entry -> entry.getKey().getName() + ": " + entry.getValue() + NEXT_LINE)
 				.collect(Collectors.toList());
 	}
 
-	private static List<String> getUnscoredPartsSortedByValue(HashMap<Part, Integer> unscoredPartsMap) {
-		return unscoredPartsMap.entrySet().stream()
-				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-				.map(entry -> entry.getKey().getName() + ": " + entry.getValue() + NEXT_LINE)
-				.collect(Collectors.toList());
-	}
+//	private static List<String> getUnscoredPartsSortedByValue(HashMap<Part, Integer> unscoredPartsMap) {
+//		return unscoredPartsMap.entrySet().stream()
+//				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+//				.map(entry -> entry.getKey().getName() + ": " + entry.getValue() + NEXT_LINE)
+//				.collect(Collectors.toList());
+//	}
 
 
 	private static List<CompleteSet> getCompleteSetsList(RebrickableWebService webServiceObject, List<String> setNumbers) {

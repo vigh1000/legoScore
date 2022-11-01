@@ -6,6 +6,7 @@ import vg.legoScore.rebrickableObjects.Set;
 import vg.legoScore.webservices.RebrickableWebService;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static vg.legoScore.util.LegoScoreUtil.*;
 
@@ -27,6 +28,7 @@ public class CompleteSet {
     private final HashMap<String, Integer> partsPerStudAreaMap = new HashMap<>();
     private final HashMap<Part, Integer> unscoredPartsMap = new HashMap<>();
     private final HashMap<Integer, Integer> partsPerStudAreaCategoryMap = new HashMap<>();
+    private Map<Part, Integer> partsWithPotentialThirdDimension = new HashMap<>();
 
     // Product of StudArea for each Category
     private final List<Integer> studAreaCategoryList = List.of(2,5,10,30,9999999);
@@ -49,6 +51,7 @@ public class CompleteSet {
 
         setPartListQuantityMap(webServiceObject);
         setRatioUniquePartsToTotalParts();
+        setPartsWithPotentialThirdDimension();
         setTotalLegoScore();
         setTotalLegoScore2();
         setTotalLegoScore3();
@@ -200,4 +203,14 @@ public class CompleteSet {
     public Set getSetDetails() {
         return setDetails;
     }
+
+    public Map<Part, Integer> getPartsWithPotentialThirdDimension() {
+        return partsWithPotentialThirdDimension;
+    }
+    private void setPartsWithPotentialThirdDimension() {
+        partsWithPotentialThirdDimension = partListQuantityMap.entrySet().stream()
+                .filter(entry -> entry.getKey().getName().matches(".*( x .* x ).*"))
+                .collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+    }
+
 }
