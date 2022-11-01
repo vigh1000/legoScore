@@ -6,6 +6,14 @@ public class LegoScoreUtil {
     private LegoScoreUtil(){
     }
 
+    public static float getPartScoreFromPartName(String partName) {
+        List<String> splitName = List.of(partName.split(" "));
+        String partWidth = splitName.get(splitName.indexOf("x") - 1);
+        String partLength = splitName.get(splitName.indexOf("x") + 1);
+
+        return (getMeasurementAsFloat(partWidth) * getMeasurementAsFloat(partLength)) * 2;
+    }
+
     public static Float getMeasurementAsFloat(String measurementAsString) {
         try {
             if (measurementAsString.contains("/")) {
@@ -16,13 +24,5 @@ public class LegoScoreUtil {
         } catch (Exception ex) {
             return 0.0f;
         }
-    }
-
-    public static float getPartScoreFromPartName(String partName) {
-        List<String> splitName = List.of(partName.split(" "));
-        String partWidth = splitName.get(splitName.indexOf("x") - 1);
-        String partLength = splitName.get(splitName.indexOf("x") + 1);
-
-        return (getMeasurementAsFloat(partWidth) * getMeasurementAsFloat(partLength)) * 2;
     }
 }

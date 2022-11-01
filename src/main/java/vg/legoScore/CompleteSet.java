@@ -27,13 +27,13 @@ public class CompleteSet {
     private final HashMap<String, Integer> partsPerCategoryMap = new HashMap<>();
     private final HashMap<String, Integer> partsPerStudAreaMap = new HashMap<>();
     private final HashMap<Part, Integer> unscoredPartsMap = new HashMap<>();
-    private final HashMap<Integer, Integer> partsPerStudAreaCategoryMap = new HashMap<>();
     private Map<Part, Integer> partsWithPotentialThirdDimension = new HashMap<>();
 
     // Product of StudArea for each Category
     private final List<Integer> studAreaCategoryList = List.of(2,5,10,30,9999999);
     // Value of Category for Score2
     private final List<Integer> studAreaValueList = List.of(1,3,8,18,40);
+    private final HashMap<Integer, Integer> partsPerStudAreaCategoryMap = new HashMap<>();
 
 
     public CompleteSet(RebrickableWebService webServiceObject) {
@@ -49,19 +49,16 @@ public class CompleteSet {
         setLegoSetNr(rebrickableSetNr.substring(0,5));
         setDetails = webServiceObject.callRebrickableSet(this.rebrickableSetNr);
 
-        setPartListQuantityMap(webServiceObject);
+        setPartMaps1(webServiceObject);
         setRatioUniquePartsToTotalParts();
         setPartsWithPotentialThirdDimension();
+        setPartMaps2();
         setTotalLegoScore();
         setTotalLegoScore2();
         setTotalLegoScore3();
     }
 
-    public HashMap<Part, Integer> getPartListQuantityMap() {
-        return partListQuantityMap;
-    }
-    //TODO: Refactor method to match name to what it actually does. Also maybe three separate methods for each map?
-    private void setPartListQuantityMap(RebrickableWebService webServiceObject) {
+    private void setPartMaps1(RebrickableWebService webServiceObject) {
         SetPartList setPartList = webServiceObject.callRebrickableSetParts(this.rebrickableSetNr);
         while (true) {
             List<Results> results = new ArrayList<Results>();
@@ -74,6 +71,42 @@ public class CompleteSet {
             }
             if (setPartList.getNext() != null) setPartList = webServiceObject.callNextSetParts(setPartList.getNext());
             else break;
+        }
+    }
+
+    private void setPartMaps2() {
+        for (Map.Entry<Part, Integer> partEntry : partListQuantityMap.entrySet()) {
+            String partName = partEntry.getKey().getName();
+
+            //TODO: Hier können dann die einzelnen Kategorien rausgefiltert und berechnet werden.
+            //      Vielleicht eigene Maps je Kategorie und die dann berechnen im Score?
+            if (partEntry.getKey().getPart_cat_id().equalsIgnoreCase("29")) {
+                unscoredPartsMap.merge(partEntry.getKey(), partEntry.getValue(), Integer::sum);
+                continue;
+            }
+            if (!partName.contains(" x ")) {
+                unscoredPartsMap.merge(partEntry.getKey(), partEntry.getValue(), Integer::sum);
+                continue;
+            }
+
+            List<String> splitName = List.of(partName.split(" "));
+            String partWidth = splitName.get(splitName.indexOf("x") - 1);
+            String partLength = splitName.get(splitName.indexOf("x") + 1);
+
+            float partScore = getPartScoreFromPartName(partName);
+            if (partScore != 0.0) {
+                partsPerStudAreaMap.merge(partWidth + " x " + partLength, partEntry.getValue(), Integer::sum);
+
+                //Fill partsPerStudAreaCategoryMap
+                for (int i = 0; i < studAreaCategoryList.size(); i++) {
+                    if ((partScore / 2) <= studAreaCategoryList.get(i)) {
+                        partsPerStudAreaCategoryMap.merge(i, partEntry.getValue(), Integer::sum);
+                        break;
+                    }
+                }
+            } else {
+                unscoredPartsMap.merge(partEntry.getKey(), partEntry.getValue(), Integer::sum);
+            }
         }
     }
 
@@ -108,36 +141,8 @@ public class CompleteSet {
         return totalLegoScore;
     }
     private void setTotalLegoScore() {
-        for (Map.Entry<Part, Integer> partEntry : partListQuantityMap.entrySet()) {
-            String partName = partEntry.getKey().getName();
-            if (partEntry.getKey().getPart_cat_id().equalsIgnoreCase("29")) {
-                unscoredPartsMap.merge(partEntry.getKey(), partEntry.getValue(), Integer::sum);
-                continue;
-            }
-            if (!partName.contains(" x ")) {
-                unscoredPartsMap.merge(partEntry.getKey(), partEntry.getValue(), Integer::sum);
-                continue;
-            }
-
-            List<String> splitName = List.of(partName.split(" "));
-            String partWidth = splitName.get(splitName.indexOf("x") - 1);
-            String partLength = splitName.get(splitName.indexOf("x") + 1);
-
-            float partScore = getPartScoreFromPartName(partName);
-
-            if (partScore != 0.0) {
-                partsPerStudAreaMap.merge(partWidth + " x " + partLength, partEntry.getValue(), Integer::sum);
-
-                for (int i = 0; i < studAreaCategoryList.size(); i++) {
-                    if ((partScore/2) <= studAreaCategoryList.get(i)) {
-                        partsPerStudAreaCategoryMap.merge(i, partEntry.getValue(), Integer::sum);
-                        break;
-                    }
-                }
-
-            } else {
-                unscoredPartsMap.merge(partEntry.getKey(), partEntry.getValue(), Integer::sum);
-            }
+        for (Map.Entry<String, Integer> partEntry : partsPerStudAreaMap.entrySet()) {
+            float partScore = getPartScoreFromPartName(partEntry.getKey());
             totalLegoScore += partScore * partEntry.getValue();
         }
         totalLegoScore = totalLegoScore / totalPartsQuantity;
@@ -158,12 +163,10 @@ public class CompleteSet {
     }
     private void setTotalLegoScore3() {
         totalLegoScore3 = partsPerStudAreaCategoryMap.get(0);
-        Float totalLegoScoreTemp = 0f;
-        totalLegoScoreTemp += partsPerStudAreaMap.entrySet().stream()
+        totalLegoScore3 += partsPerStudAreaMap.entrySet().stream()
                 .filter(entry -> !entry.getKey().matches("^(1 x 1|1 x 2|2 x 1)"))
                 .map(entry -> getPartScoreFromPartName(entry.getKey()) * entry.getValue())
                 .reduce(0f, Float::sum);
-        totalLegoScore3 += totalLegoScoreTemp;
         totalLegoScore3 = totalLegoScore3 / totalPartsQuantity;
     }
 
