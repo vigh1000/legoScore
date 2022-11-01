@@ -248,16 +248,6 @@ public class LegoScoreApplication {
 	private Integer getAmountForThisMap(Collection<Integer> valuesForThisMap) {
 		return valuesForThisMap.stream()
 				.mapToInt(Integer::intValue).sum();
-
-//		return valuesForThisMap.values().stream()
-//				.reduce(0, Integer::sum);
-	}
-
-	private Integer getAmountForThisMap(HashMap<Part, Integer> map) {
-		return map.entrySet().stream()
-				.filter(entry -> entry.getKey().getName().matches(".*( x .* x ).*"))
-				.map(Map.Entry::getValue)
-				.mapToInt(Integer::intValue).sum();
 	}
 
 	private Collection<String> getPartsPerStudAreaCategorySortedByKey(HashMap<Integer, Integer> partsPerStudAreaCategoryMap, int totalParts) {
@@ -293,14 +283,6 @@ public class LegoScoreApplication {
 				.map(entry -> entry.getKey().getName() + ": " + entry.getValue() + NEXT_LINE)
 				.collect(Collectors.toList());
 	}
-
-//	private static List<String> getUnscoredPartsSortedByValue(HashMap<Part, Integer> unscoredPartsMap) {
-//		return unscoredPartsMap.entrySet().stream()
-//				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-//				.map(entry -> entry.getKey().getName() + ": " + entry.getValue() + NEXT_LINE)
-//				.collect(Collectors.toList());
-//	}
-
 
 	private static List<CompleteSet> getCompleteSetsList(RebrickableWebService webServiceObject, List<String> setNumbers) {
 		List<CompleteSet> completeSetList = new ArrayList<>();

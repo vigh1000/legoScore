@@ -83,20 +83,18 @@ public class CompleteSet {
     public void setLegoSetNr(String legoSetNr) {
         this.legoSetNr = legoSetNr;
     }
-
     public String getRebrickableSetNr() {
         return rebrickableSetNr;
     }
     public void setRebrickableSetNr(String rebrickableSetNr) {
         this.rebrickableSetNr = rebrickableSetNr;
     }
-
     public void setRebrickableSetNrViaLegoSetNr(String legoSetNr) {
         this.rebrickableSetNr = legoSetNr + "-1";
     }
 
     public int getTotalPartsQuantity() { return totalPartsQuantity;}
-    public void setTotalPartsQuantity(int totalPartsQuantity) { this.totalPartsQuantity = totalPartsQuantity;}
+    private void setTotalPartsQuantity(int totalPartsQuantity) { this.totalPartsQuantity = totalPartsQuantity;}
     private void addToTotalPartsQuantity(int quantityToAdd) {totalPartsQuantity += quantityToAdd;}
 
     public float getRatioUniquePartsToTotalParts() {
@@ -109,7 +107,7 @@ public class CompleteSet {
     public float getTotalLegoScore() {
         return totalLegoScore;
     }
-    public void setTotalLegoScore() {
+    private void setTotalLegoScore() {
         for (Map.Entry<Part, Integer> partEntry : partListQuantityMap.entrySet()) {
             String partName = partEntry.getKey().getName();
             if (partEntry.getKey().getPart_cat_id().equalsIgnoreCase("29")) {
