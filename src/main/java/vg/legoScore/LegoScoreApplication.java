@@ -136,15 +136,15 @@ public class LegoScoreApplication {
 
 		ArrayList<String> returnList = new ArrayList<>();
 		for (CompleteSet completeSet : completeSetList) {
-			returnList.add(completeSet.setDetails.toString() + NEXT_LINE);
+			returnList.add(completeSet.getSetDetails().toString() + NEXT_LINE);
 			returnList.add("----------------------------------------" + NEXT_LINE);
 			returnList.add("SpaaaackScore: " + String.format("%.2f",completeSet.getTotalLegoScore()) + NEXT_LINE);
 			returnList.add("SpaaaackScore2: " + String.format("%.2f",completeSet.getTotalLegoScore2()) + NEXT_LINE);
 			returnList.add("SpaaaackScore3: " + String.format("%.2f",completeSet.getTotalLegoScore3()) + NEXT_LINE);
 			returnList.add("Ratio unique parts to total parts: " + String.format("%.2f", completeSet.getRatioUniquePartsToTotalParts()) + NEXT_LINE);
 			returnList.add("Total quantity including spare parts: " + String.valueOf(completeSet.getTotalPartsQuantity()) + NEXT_LINE);
-			returnList.add("Number of colors in this set: " + String.valueOf(completeSet.partsPerColorMap.size()) + NEXT_LINE);
-			returnList.add("Number of different part categories in this set: " + String.valueOf(completeSet.partsPerCategoryMap.size()) + NEXT_LINE);
+			returnList.add("Number of colors in this set: " + String.valueOf(completeSet.getPartsPerColorMapSize()) + NEXT_LINE);
+			returnList.add("Number of different part categories in this set: " + String.valueOf(completeSet.getPartsPerCategoryMapSize()) + NEXT_LINE);
 			returnList.add("----------------------------------------" + NEXT_LINE);
 		}
 		returnList.add("Done");
@@ -208,7 +208,7 @@ public class LegoScoreApplication {
 		if (input.length() == 4) input = input + "-1";
 
 		CompleteSet completeSet = new CompleteSet(input, webServiceObject);
-		returnList.add(completeSet.setDetails.toString() + NEXT_LINE);
+		returnList.add(completeSet.getSetDetails().toString() + NEXT_LINE);
 		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("SpaaaackScore: " + String.format("%.2f",completeSet.getTotalLegoScore()) + NEXT_LINE);
 		returnList.add("SpaaaackScore2: " + String.format("%.2f",completeSet.getTotalLegoScore2()) + NEXT_LINE);
@@ -225,16 +225,16 @@ public class LegoScoreApplication {
 		returnList.addAll(getPartsPerStudAreaCategorySortedByKey(completeSet.getPartsPerStudAreaCategoryMap(), completeSet.getTotalPartsQuantity()));
 
 		returnList.add("-----------------------------------------" + NEXT_LINE);
-		returnList.add("Number of colors in this set: " + String.valueOf(completeSet.partsPerColorMap.size()) + NEXT_LINE);
-		returnList.addAll(getPartsPerColorSortedByValue(completeSet.partsPerColorMap, completeSet.getTotalPartsQuantity()));
+		returnList.add("Number of colors in this set: " + String.valueOf(completeSet.getPartsPerColorMapSize()) + NEXT_LINE);
+		returnList.addAll(getPartsPerColorSortedByValue(completeSet.getPartsPerColorMap(), completeSet.getTotalPartsQuantity()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
-		returnList.add("Number of different part categories in this set: " + String.valueOf(completeSet.partsPerCategoryMap.size()) + NEXT_LINE);
+		returnList.add("Number of different part categories in this set: " + String.valueOf(completeSet.getPartsPerCategoryMapSize()) + NEXT_LINE);
 		returnList.addAll(getPartsPerCategorySortedByValue(completeSet.getPartsPerCategoryMap(), allPartCategories, completeSet.getTotalPartsQuantity()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
-		returnList.add("List potential parts with 3rd dimension: " + getAmountForThisMap(completeSet.partListQuantityMap) + NEXT_LINE);
-		returnList.addAll(getPartsWithPotentialThirdDimensionSortedByValue(completeSet.partListQuantityMap));
+		returnList.add("List potential parts with 3rd dimension: " + getAmountForThisMap(completeSet.getPartListQuantityMap()) + NEXT_LINE);
+		returnList.addAll(getPartsWithPotentialThirdDimensionSortedByValue(completeSet.getPartListQuantityMap()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("List unscored parts: " + getAmountForThisMap(completeSet.getUnscoredPartsMap().values()) + NEXT_LINE);

@@ -20,18 +20,18 @@ public class CompleteSet {
     private float totalLegoScore2;
     private float totalLegoScore3;
 
-    public Set setDetails;
-    public HashMap<Part, Integer> partListQuantityMap = new HashMap<>();
-    public HashMap<Color, Integer> partsPerColorMap = new HashMap<>();
-    public HashMap<String, Integer> partsPerCategoryMap = new HashMap<>();
-    public HashMap<String, Integer> partsPerStudAreaMap = new HashMap<>();
-    public HashMap<Part, Integer> unscoredPartsMap = new HashMap<>();
-    public HashMap<Integer, Integer> partsPerStudAreaCategoryMap = new HashMap<>();
+    private Set setDetails;
+    private final HashMap<Part, Integer> partListQuantityMap = new HashMap<>();
+    private final HashMap<Color, Integer> partsPerColorMap = new HashMap<>();
+    private final HashMap<String, Integer> partsPerCategoryMap = new HashMap<>();
+    private final HashMap<String, Integer> partsPerStudAreaMap = new HashMap<>();
+    private final HashMap<Part, Integer> unscoredPartsMap = new HashMap<>();
+    private final HashMap<Integer, Integer> partsPerStudAreaCategoryMap = new HashMap<>();
 
     // Product of StudArea for each Category
-    public List<Integer> studAreaCategoryList = List.of(2,5,10,30,9999999);
+    private final List<Integer> studAreaCategoryList = List.of(2,5,10,30,9999999);
     // Value of Category for Score2
-    public List<Integer> studAreaValueList = List.of(1,3,8,18,40);
+    private final List<Integer> studAreaValueList = List.of(1,3,8,18,40);
 
 
     public CompleteSet(RebrickableWebService webServiceObject) {
@@ -54,6 +54,10 @@ public class CompleteSet {
         setTotalLegoScore3();
     }
 
+    public HashMap<Part, Integer> getPartListQuantityMap() {
+        return partListQuantityMap;
+    }
+    //TODO: Refactor method to match name to what it actually does. Also maybe three separate methods for each map?
     private void setPartListQuantityMap(RebrickableWebService webServiceObject) {
         SetPartList setPartList = webServiceObject.callRebrickableSetParts(this.rebrickableSetNr);
         while (true) {
@@ -201,5 +205,19 @@ public class CompleteSet {
 
     public HashMap<Integer, Integer> getPartsPerStudAreaCategoryMap() {
         return partsPerStudAreaCategoryMap;
+    }
+    public int getPartsPerCategoryMapSize() {
+        return partsPerCategoryMap.size();
+    }
+
+    public HashMap<Color, Integer> getPartsPerColorMap() {
+        return partsPerColorMap;
+    }
+    public int getPartsPerColorMapSize() {
+        return partsPerColorMap.size();
+    }
+
+    public Set getSetDetails() {
+        return setDetails;
     }
 }
