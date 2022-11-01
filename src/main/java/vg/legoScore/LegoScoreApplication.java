@@ -140,6 +140,7 @@ public class LegoScoreApplication {
 			returnList.add("----------------------------------------" + NEXT_LINE);
 			returnList.add("SpaaaackScore: " + String.format("%.2f",completeSet.getTotalLegoScore()) + NEXT_LINE);
 			returnList.add("SpaaaackScore2: " + String.format("%.2f",completeSet.getTotalLegoScore2()) + NEXT_LINE);
+			returnList.add("SpaaaackScore3: " + String.format("%.2f",completeSet.getTotalLegoScore3()) + NEXT_LINE);
 			returnList.add("Ratio unique parts to total parts: " + String.format("%.2f", completeSet.getRatioUniquePartsToTotalParts()) + NEXT_LINE);
 			returnList.add("Total quantity including spare parts: " + String.valueOf(completeSet.getTotalPartsQuantity()) + NEXT_LINE);
 			returnList.add("Number of colors in this set: " + String.valueOf(completeSet.partsPerColorMap.size()) + NEXT_LINE);
@@ -211,6 +212,7 @@ public class LegoScoreApplication {
 		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("SpaaaackScore: " + String.format("%.2f",completeSet.getTotalLegoScore()) + NEXT_LINE);
 		returnList.add("SpaaaackScore2: " + String.format("%.2f",completeSet.getTotalLegoScore2()) + NEXT_LINE);
+		returnList.add("SpaaaackScore3: " + String.format("%.2f",completeSet.getTotalLegoScore3()) + NEXT_LINE);
 		returnList.add("Ratio unique parts to total parts: " + String.format("%.2f", completeSet.getRatioUniquePartsToTotalParts()) + NEXT_LINE);
 		returnList.add("Total quantity including spare parts: " + String.valueOf(completeSet.getTotalPartsQuantity()) + NEXT_LINE);
 

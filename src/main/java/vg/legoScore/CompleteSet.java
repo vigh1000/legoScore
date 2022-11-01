@@ -5,7 +5,9 @@ import vg.legoScore.rebrickableObjects.*;
 import vg.legoScore.rebrickableObjects.Set;
 import vg.legoScore.webservices.RebrickableWebService;
 
+import javax.swing.text.StyledEditorKit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CompleteSet {
     private RestTemplate restTemplate;
@@ -16,6 +18,7 @@ public class CompleteSet {
     private float ratioUniquePartsToTotalParts;
     private float totalLegoScore;
     private float totalLegoScore2;
+    private float totalLegoScore3;
 
     public Set setDetails;
     public HashMap<Part, Integer> partListQuantityMap = new HashMap<>();
@@ -48,6 +51,7 @@ public class CompleteSet {
         setRatioUniquePartsToTotalParts();
         setTotalLegoScore();
         setTotalLegoScore2();
+        setTotalLegoScore3();
     }
 
     private void setPartListQuantityMap(RebrickableWebService webServiceObject) {
@@ -114,7 +118,8 @@ public class CompleteSet {
             String partWidth = splitName.get(splitName.indexOf("x") - 1);
             String partLength = splitName.get(splitName.indexOf("x") + 1);
 
-            float partScore = (getMeasurementAsFloat(partWidth) * getMeasurementAsFloat(partLength)) * 2;
+            float partScore = getPartScoreFromPartName(partName);
+
             if (partScore != 0.0) {
                 partsPerStudAreaMap.merge(partWidth + " x " + partLength, partEntry.getValue(), Integer::sum);
 
@@ -128,10 +133,17 @@ public class CompleteSet {
             } else {
                 unscoredPartsMap.merge(partEntry.getKey(), partEntry.getValue(), Integer::sum);
             }
-            //System.out.println(totalLegoScore + " " + " " + partScore + " " + partWidthInFloat + " " + partLengthInFloat + " " + partEntry.getValue() + " "+ partName);
             totalLegoScore += partScore * partEntry.getValue();
         }
         totalLegoScore = totalLegoScore / totalPartsQuantity;
+    }
+
+    private float getPartScoreFromPartName(String partName) {
+        List<String> splitName = List.of(partName.split(" "));
+        String partWidth = splitName.get(splitName.indexOf("x") - 1);
+        String partLength = splitName.get(splitName.indexOf("x") + 1);
+
+        return (getMeasurementAsFloat(partWidth) * getMeasurementAsFloat(partLength)) * 2;
     }
 
     public float getTotalLegoScore2() {
@@ -142,6 +154,22 @@ public class CompleteSet {
             totalLegoScore2 += studAreaValueList.get(studAreaCategoryEntry.getKey()) * studAreaCategoryEntry.getValue();
         }
         totalLegoScore2 = totalLegoScore2 / totalPartsQuantity;
+    }
+
+    public float getTotalLegoScore3() {
+        return totalLegoScore3;
+    }
+    private void setTotalLegoScore3() {
+        totalLegoScore3 = partsPerStudAreaCategoryMap.get(0);
+        System.out.println("totalLegoScore3: " + totalLegoScore3);
+
+        Float totalLegoScoreTemp = 0f;
+        totalLegoScoreTemp += partsPerStudAreaMap.entrySet().stream()
+                .filter(entry -> !entry.getKey().matches("^(1 x 1|1 x 2|2 x 1)"))
+                .map(entry -> getPartScoreFromPartName(entry.getKey()) * entry.getValue())
+                .reduce(0f, Float::sum);
+        totalLegoScore3 += totalLegoScoreTemp;
+        totalLegoScore3 = totalLegoScore3 / totalPartsQuantity;
     }
 
     private Float getMeasurementAsFloat(String measurementAsString) {
