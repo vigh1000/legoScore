@@ -50,9 +50,9 @@ public class CompleteSet {
         setDetails = webServiceObject.callRebrickableSet(this.rebrickableSetNr);
 
         setPartMaps1(webServiceObject);
+        setPartMaps2();
         setRatioUniquePartsToTotalParts();
         setPartsWithPotentialThirdDimension();
-        setPartMaps2();
         setTotalLegoScore();
         setTotalLegoScore2();
         setTotalLegoScore3();
@@ -145,6 +145,7 @@ public class CompleteSet {
             float partScore = getPartScoreFromPartName(partEntry.getKey());
             totalLegoScore += partScore * partEntry.getValue();
         }
+        totalLegoScore += getThirdDimensionScore(partsWithPotentialThirdDimension);
         totalLegoScore = totalLegoScore / totalPartsQuantity;
     }
 
@@ -155,6 +156,7 @@ public class CompleteSet {
         for (Map.Entry<Integer, Integer> studAreaCategoryEntry : partsPerStudAreaCategoryMap.entrySet()) {
             totalLegoScore2 += studAreaValueList.get(studAreaCategoryEntry.getKey()) * studAreaCategoryEntry.getValue();
         }
+        totalLegoScore2 += getThirdDimensionScore(partsWithPotentialThirdDimension);
         totalLegoScore2 = totalLegoScore2 / totalPartsQuantity;
     }
 
@@ -167,6 +169,7 @@ public class CompleteSet {
                 .filter(entry -> !entry.getKey().matches("^(1 x 1|1 x 2|2 x 1)"))
                 .map(entry -> getPartScoreFromPartName(entry.getKey()) * entry.getValue())
                 .reduce(0f, Float::sum);
+        totalLegoScore3 += getThirdDimensionScore(partsWithPotentialThirdDimension);
         totalLegoScore3 = totalLegoScore3 / totalPartsQuantity;
     }
 
