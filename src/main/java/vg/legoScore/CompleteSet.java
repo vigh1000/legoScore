@@ -5,9 +5,9 @@ import vg.legoScore.rebrickableObjects.*;
 import vg.legoScore.rebrickableObjects.Set;
 import vg.legoScore.webservices.RebrickableWebService;
 
-import javax.swing.text.StyledEditorKit;
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static vg.legoScore.util.LegoScoreUtil.*;
 
 public class CompleteSet {
     private RestTemplate restTemplate;
@@ -142,14 +142,6 @@ public class CompleteSet {
         totalLegoScore = totalLegoScore / totalPartsQuantity;
     }
 
-    private float getPartScoreFromPartName(String partName) {
-        List<String> splitName = List.of(partName.split(" "));
-        String partWidth = splitName.get(splitName.indexOf("x") - 1);
-        String partLength = splitName.get(splitName.indexOf("x") + 1);
-
-        return (getMeasurementAsFloat(partWidth) * getMeasurementAsFloat(partLength)) * 2;
-    }
-
     public float getTotalLegoScore2() {
         return totalLegoScore2;
     }
@@ -172,18 +164,6 @@ public class CompleteSet {
                 .reduce(0f, Float::sum);
         totalLegoScore3 += totalLegoScoreTemp;
         totalLegoScore3 = totalLegoScore3 / totalPartsQuantity;
-    }
-
-    private Float getMeasurementAsFloat(String measurementAsString) {
-        try {
-            if (measurementAsString.contains("/")) {
-                List<String> splitMeasurement = List.of(measurementAsString.split("/"));
-                measurementAsString = String.valueOf(Float.parseFloat(splitMeasurement.get(0)) / Float.parseFloat(splitMeasurement.get(1)));
-            }
-            return Float.parseFloat(measurementAsString);
-        } catch (Exception ex) {
-            return 0.0f;
-        }
     }
 
     public HashMap<Long, Integer> getPartsPerCategoryMap () {
