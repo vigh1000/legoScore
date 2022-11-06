@@ -55,8 +55,21 @@ public class LegoScoreUtil {
         return thirdDimensionScore;
     }
 
-    private static float getScoreForBracketsCountedAsTwoParts(Map<Part, Integer> bracketsCountedAsTwoParts) {
-        return 0;
+    private static float getScoreForBracketsCountedAsTwoParts(Map<Part, Integer> bracketsCountedAsTwoParts) {        //Zweimal getPartScoreFromPartName aufrufen mit gesplittetem Bracket Namen
+        //Bracket 1 x 2 - 3 x 4
+        float score = 0.0f;
+        for (Map.Entry<Part, Integer> partIntegerEntry : bracketsCountedAsTwoParts.entrySet()) {
+            List<String> splittedName = List.of(partIntegerEntry.getKey().getName().split(" "));
+
+            String partWidthFirst = splittedName.get(splittedName.indexOf("-") - 3);
+            String partLengthFirst = splittedName.get(splittedName.indexOf("-") - 1);
+            score += getPartScoreFromPartName(partWidthFirst + " x " + partLengthFirst);
+
+            String partWidthSecond = splittedName.get(splittedName.indexOf("-") + 1);
+            String partLengthSecond = splittedName.get(splittedName.indexOf("-") + 3);
+            score += getPartScoreFromPartName(partWidthFirst + " x " + partLengthFirst);
+        }
+        return score;
     }
 
     private static float getScoreForPartsWithThirdDimension(Map<Part, Integer> partsWithPotentialThirdDimension) {
