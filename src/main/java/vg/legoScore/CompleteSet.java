@@ -189,6 +189,13 @@ public class CompleteSet {
         return partsPerCategoryMap;
     }
 
+    public List<Integer> getStudAreaCategoryList() {
+        return studAreaCategoryList;
+    }
+    public List<Integer> getStudAreaValueList() {
+        return studAreaValueList;
+    }
+
     public HashMap<String, Integer> getPartsPerStudAreaMap() {
         return partsPerStudAreaMap;
     }
@@ -217,5 +224,17 @@ public class CompleteSet {
 
     public Map<Part, Integer> getPartsWithPotentialThirdDimension() {
         return partsWithPotentialThirdDimension;
+    }
+
+    public List<String> getBrickCategories() {
+        return brickCategories;
+    }
+
+    public HashMap<Part, Integer> getBricksOfAllCategoriesWithHeightOne() {
+        return bricksOfAllCategoriesWithHeightOne;
+    }
+
+    public HashMap<Part, Integer> getBracketsCountedAsTwoParts() {
+        return bracketsCountedAsTwoParts;
     }
 }
