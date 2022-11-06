@@ -141,10 +141,7 @@ public class CompleteSet {
         return totalLegoScore;
     }
     private void setTotalLegoScore() {
-        for (Map.Entry<String, Integer> partEntry : partsPerStudAreaMap.entrySet()) {
-            float partScore = getPartScoreFromPartName(partEntry.getKey());
-            totalLegoScore += partScore * partEntry.getValue();
-        }
+        totalLegoScore += getTwoDimensionScore(partsPerStudAreaMap);
         totalLegoScore += getThirdDimensionScore(partsWithPotentialThirdDimension);
         totalLegoScore = totalLegoScore / totalPartsQuantity;
     }
