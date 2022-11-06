@@ -35,6 +35,9 @@ public class CompleteSet {
     private final List<Integer> studAreaValueList = List.of(1,3,8,18,40);
     private final HashMap<Integer, Integer> partsPerStudAreaCategoryMap = new HashMap<>();
 
+    private final List<String> brickCategories = List.of("3", "5", "6", "7", "8", "11", "20", "37");
+    private final HashMap<Part, Integer> bricksOfAllCategoriesWithHeightOne = new HashMap<>();
+    private final HashMap<Part, Integer> bracketsCountedAsTwoParts = new HashMap<>();
 
     public CompleteSet(RebrickableWebService webServiceObject) {
     }
@@ -52,7 +55,6 @@ public class CompleteSet {
         setPartMaps1(webServiceObject);
         setPartMaps2();
         setRatioUniquePartsToTotalParts();
-        setPartsWithPotentialThirdDimension();
         setTotalLegoScore();
         setTotalLegoScore2();
         setTotalLegoScore3();
@@ -87,6 +89,14 @@ public class CompleteSet {
             if (!partName.contains(" x ")) {
                 unscoredPartsMap.merge(partEntry.getKey(), partEntry.getValue(), Integer::sum);
                 continue;
+            }
+
+            if (brickCategories.contains(partEntry.getKey().getPart_cat_id()) && !partName.matches(".*( x .* x ).*")) {
+                bricksOfAllCategoriesWithHeightOne.merge(partEntry.getKey(), partEntry.getValue(), Integer::sum);
+            } else if (partName.startsWith("Bracket") && partName.matches(".*( x .* x ).*") && partName.contains(" - ")) {
+                bracketsCountedAsTwoParts.merge(partEntry.getKey(), partEntry.getValue(), Integer::sum);
+            } else if (partName.matches(".*( x .* x ).*")) {
+                partsWithPotentialThirdDimension.merge(partEntry.getKey(), partEntry.getValue(), Integer::sum);
             }
 
             List<String> splitName = List.of(partName.split(" "));
@@ -142,7 +152,7 @@ public class CompleteSet {
     }
     private void setTotalLegoScore() {
         totalLegoScore += getTwoDimensionScore(partsPerStudAreaMap);
-        totalLegoScore += getThirdDimensionScore(partsWithPotentialThirdDimension);
+        totalLegoScore += getThirdDimensionScore(partsWithPotentialThirdDimension, bricksOfAllCategoriesWithHeightOne, bracketsCountedAsTwoParts);
         totalLegoScore = totalLegoScore / totalPartsQuantity;
     }
 
@@ -153,7 +163,7 @@ public class CompleteSet {
         for (Map.Entry<Integer, Integer> studAreaCategoryEntry : partsPerStudAreaCategoryMap.entrySet()) {
             totalLegoScore2 += studAreaValueList.get(studAreaCategoryEntry.getKey()) * studAreaCategoryEntry.getValue();
         }
-        totalLegoScore2 += getThirdDimensionScore(partsWithPotentialThirdDimension);
+        totalLegoScore2 += getThirdDimensionScore(partsWithPotentialThirdDimension, bricksOfAllCategoriesWithHeightOne, bracketsCountedAsTwoParts);
         totalLegoScore2 = totalLegoScore2 / totalPartsQuantity;
     }
 
@@ -166,7 +176,7 @@ public class CompleteSet {
                 .filter(entry -> !entry.getKey().matches("^(1 x 1|1 x 2|2 x 1)"))
                 .map(entry -> getPartScoreFromPartName(entry.getKey()) * entry.getValue())
                 .reduce(0f, Float::sum);
-        totalLegoScore3 += getThirdDimensionScore(partsWithPotentialThirdDimension);
+        totalLegoScore3 += getThirdDimensionScore(partsWithPotentialThirdDimension, bricksOfAllCategoriesWithHeightOne, bracketsCountedAsTwoParts);
         totalLegoScore3 = totalLegoScore3 / totalPartsQuantity;
     }
 
@@ -208,10 +218,4 @@ public class CompleteSet {
     public Map<Part, Integer> getPartsWithPotentialThirdDimension() {
         return partsWithPotentialThirdDimension;
     }
-    private void setPartsWithPotentialThirdDimension() {
-        partsWithPotentialThirdDimension = partListQuantityMap.entrySet().stream()
-                .filter(entry -> entry.getKey().getName().matches(".*( x .* x ).*"))
-                .collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
-    }
-
 }

@@ -33,16 +33,18 @@ public class LegoScoreUtil {
     public static float getTwoDimensionScore(Map<String, Integer> partsPerStudAreaMap) {
         float twoDimensionScore = 0.0f;
         for (Map.Entry<String, Integer> partEntry : partsPerStudAreaMap.entrySet()) {
-                float partScore = getPartScoreFromPartName(partEntry.getKey());
+            float partScore = getPartScoreFromPartName(partEntry.getKey());
             twoDimensionScore += partScore * partEntry.getValue();
         }
         return twoDimensionScore;
     }
 
-    public static float getThirdDimensionScore(Map<Part, Integer> partsWithPotentialThirdDimension) {
+    public static float getThirdDimensionScore(Map<Part, Integer> partsWithPotentialThirdDimension, Map<Part, Integer> bricksWithHeightOne, Map<Part, Integer> bracketsCountedAsTwoParts) {
         float thirdDimensionScore = 0.0f;
 
-        //TODO: Brackets: Bracket 1 x 2 - 2 x 4
+        thirdDimensionScore += getScoreForBracketsCountedAsTwoParts(bracketsCountedAsTwoParts);
+        thirdDimensionScore += getScoreForBricksWithHeightOne(bricksWithHeightOne);
+        thirdDimensionScore += getScoreForPartsWithThirdDimension(partsWithPotentialThirdDimension);
 
         //TODO: Bricks:
         //      Brick 2x2 => Normale Dicke, also 3 Plates  => Arghhhh, normale Bricks tauchen in dieser Liste garnicht auf... (Bricks, Bricks Arched, Bricks Sloped....)
@@ -51,5 +53,17 @@ public class LegoScoreUtil {
 
 
         return thirdDimensionScore;
+    }
+
+    private static float getScoreForBracketsCountedAsTwoParts(Map<Part, Integer> bracketsCountedAsTwoParts) {
+        return 0;
+    }
+
+    private static float getScoreForPartsWithThirdDimension(Map<Part, Integer> partsWithPotentialThirdDimension) {
+        return 0;
+    }
+
+    private static float getScoreForBricksWithHeightOne(Map<Part, Integer> bricksWithHeightOne) {
+        return 0;
     }
 }
