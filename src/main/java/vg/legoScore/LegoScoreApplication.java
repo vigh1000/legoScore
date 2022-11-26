@@ -233,8 +233,16 @@ public class LegoScoreApplication {
 		returnList.addAll(getPartsPerCategorySortedByValue(completeSet.getPartsPerCategoryMap(), allPartCategories, completeSet.getTotalPartsQuantity()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
-		returnList.add("List potential parts with 3rd dimension: " + getAmountForThisMap(completeSet.getPartsWithPotentialThirdDimension().values()) + NEXT_LINE);
-		returnList.addAll(getListOfSomePartSetSortedByValue(completeSet.getPartsWithPotentialThirdDimension()));
+		returnList.add("List parts with 3rd dimension in Name (no Bricks with Thickness 1 etc.): " + getAmountForThisMap(completeSet.getPartsWithThirdDimensionInName().values()) + NEXT_LINE);
+		returnList.addAll(getListOfSomePartSetSortedByValue(completeSet.getPartsWithThirdDimensionInName()));
+
+		returnList.add("----------------------------------------" + NEXT_LINE);
+		returnList.add("List Bricks/Parts with Thickness 1: " + getAmountForThisMap(completeSet.getBricksOfAllCategoriesWithHeightOne().values()) + NEXT_LINE);
+		returnList.addAll(getListOfSomePartSetSortedByValue(completeSet.getBricksOfAllCategoriesWithHeightOne()));
+
+		returnList.add("----------------------------------------" + NEXT_LINE);
+		returnList.add("List Brackets (only which are counted as two Parts): " + getAmountForThisMap(completeSet.getBracketsCountedAsTwoParts().values()) + NEXT_LINE);
+		returnList.addAll(getListOfSomePartSetSortedByValue(completeSet.getBracketsCountedAsTwoParts()));
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("List unscored parts: " + getAmountForThisMap(completeSet.getUnscoredPartsMap().values()) + NEXT_LINE);
