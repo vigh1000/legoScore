@@ -167,6 +167,21 @@ public class LegoScoreApplication {
 
 	}
 
+	@GetMapping("/userPartList")
+	public String userPartList(@RequestParam(value= "userToken") String userToken, @RequestParam(value = "listID") String listID, RestTemplate restTemplate) throws JsonProcessingException {
+		if (listID == null) return "Keine SetNummer angegeben";
+		if (userToken == null) return "Kein UserToken angegeben";
+
+		RebrickableWebService webServiceObject = new RebrickableWebService(restTemplate);
+		CompleteSet completeSet = new CompleteSet(webServiceObject, listID, userToken);
+
+		ArrayList<String> returnList = new ArrayList<>();
+		//returnList.add(completeSet.getSetDetails().toString() + NEXT_LINE);
+		//TODO: PartListDetails noch hinzu. Eigene Klasse weil doch nicht kompatibel mit Set?!?
+		returnList.addAll(fillReturnList(completeSet, webServiceObject));
+		return returnList.toString().replaceAll(NEXT_LINE + ", ","<br />");
+	}
+
 	@GetMapping("/setJSON")
 	public String setJSON(@RequestParam(value = "setNr") String setNr, @RequestParam(value = "key", required = false) String key, RestTemplate restTemplate) throws JsonProcessingException {
 		if (setNr == null) return "Keine SetNummer angegeben";
@@ -193,7 +208,6 @@ public class LegoScoreApplication {
 	public String set(@RequestParam(value = "setNr") String setNr, @RequestParam(value = "key", required = false) String key, RestTemplate restTemplate) {
 		if (setNr == null) return "Keine SetNummer angegeben";
 
-		ArrayList<String> returnList = new ArrayList<>();
 		RebrickableWebService webServiceObject;
 		if (key==null) {
 			webServiceObject = new RebrickableWebService(restTemplate);
@@ -201,14 +215,21 @@ public class LegoScoreApplication {
 			webServiceObject = new RebrickableWebService(restTemplate, key);
 		}
 
-		PartCategories allPartCategories = webServiceObject.callRebrickablePartCategories();
-
 		String input = setNr;
 		if (input.length() == 5) input = input + "-1";
 		if (input.length() == 4) input = input + "-1";
 
 		CompleteSet completeSet = new CompleteSet(input, webServiceObject);
+
+		ArrayList<String> returnList = new ArrayList<>();
 		returnList.add(completeSet.getSetDetails().toString() + NEXT_LINE);
+		returnList.addAll(fillReturnList(completeSet, webServiceObject));
+		return returnList.toString().replaceAll(NEXT_LINE + ", ","<br />");
+	}
+
+	private List<String> fillReturnList(CompleteSet completeSet, RebrickableWebService webServiceObject) {
+		PartCategories allPartCategories = webServiceObject.callRebrickablePartCategories();
+		List<String> returnList = new ArrayList<>();
 		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("SpaaaackScore: " + String.format("%.2f",completeSet.getTotalLegoScore()) + NEXT_LINE);
 		returnList.add("SpaaaackScore2: " + String.format("%.2f",completeSet.getTotalLegoScore2()) + NEXT_LINE);
@@ -250,7 +271,8 @@ public class LegoScoreApplication {
 
 		returnList.add("----------------------------------------" + NEXT_LINE);
 		returnList.add("Done");
-		return returnList.toString().replaceAll(NEXT_LINE + ", ","<br />");
+
+		return returnList;
 	}
 
 	private Integer getAmountForThisMap(Collection<Integer> valuesForThisMap) {

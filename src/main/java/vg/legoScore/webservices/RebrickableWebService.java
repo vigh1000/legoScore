@@ -77,4 +77,16 @@ public class RebrickableWebService {
         return restTemplate.getForObject(
                 "https://rebrickable.com/api/v3/users/" + userToken + "/setlists/" + list_id + "/sets" + "/?key=" + getKey(), UserSetList.class);
     }
+
+    public SetPartList callRebrickableUserPartListViaListID(String userToken, String list_id) {
+        System.out.println("https://rebrickable.com/api/v3/users/" + userToken + "/partlists/" + list_id + "/parts" + "/?key=" + getKey());
+        return restTemplate.getForObject(
+                "https://rebrickable.com/api/v3/users/" + userToken + "/partlists/" + list_id + "/parts" + "/?key=" + getKey(), SetPartList.class);
+    }
+
+    public Set callRebrickableUserPartListDetailsViaListID(String userToken, String list_id) {
+        System.out.println("https://rebrickable.com/api/v3/users/" + userToken + "/partlists/" + list_id + "/?key=" + getKey());
+        return restTemplate.getForObject(
+                "https://rebrickable.com/api/v3/users/" + userToken + "/partlists/" + list_id + "/parts" + "/?key=" + getKey(), Set.class);
+    }
 }

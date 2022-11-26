@@ -38,20 +38,22 @@ public class CompleteSet {
     private final HashMap<Part, Integer> bricksOfAllCategoriesWithHeightOne = new HashMap<>();
     private final HashMap<Part, Integer> bracketsCountedAsTwoParts = new HashMap<>();
 
-    public CompleteSet(RebrickableWebService webServiceObject) {
-    }
-
-    public CompleteSet(int legoSetNr, RebrickableWebService webServiceObject) {
-        setLegoSetNr(String.valueOf(legoSetNr));
-        setRebrickableSetNrViaLegoSetNr(this.legoSetNr);
+    public CompleteSet(RebrickableWebService webServiceObject, String listID, String userToken) {
+        setRebrickableSetNr(listID);
+        setDetails = webServiceObject.callRebrickableUserPartListDetailsViaListID(userToken, listID);
+        setPartMaps1(webServiceObject, userToken);
+        finalizeInitialisation();
     }
 
     public CompleteSet(String rebrickableSetNr, RebrickableWebService webServiceObject) {
         setRebrickableSetNr(rebrickableSetNr);
         setLegoSetNr(rebrickableSetNr.substring(0,5));
         setDetails = webServiceObject.callRebrickableSet(this.rebrickableSetNr);
-
         setPartMaps1(webServiceObject);
+        finalizeInitialisation();
+    }
+
+    private void finalizeInitialisation() {
         setPartMaps2();
         setRatioUniquePartsToTotalParts();
         setTotalLegoScore();
@@ -61,6 +63,15 @@ public class CompleteSet {
 
     private void setPartMaps1(RebrickableWebService webServiceObject) {
         SetPartList setPartList = webServiceObject.callRebrickableSetParts(this.rebrickableSetNr);
+        setPartMaps1(webServiceObject, setPartList);
+    }
+
+    private void setPartMaps1(RebrickableWebService webServiceObject, String userToken) {
+        SetPartList setPartList = webServiceObject.callRebrickableUserPartListViaListID(userToken, this.rebrickableSetNr);
+        setPartMaps1(webServiceObject, setPartList);
+    }
+
+    private void setPartMaps1(RebrickableWebService webServiceObject, SetPartList setPartList) {
         while (true) {
             List<Results> results = new ArrayList<Results>();
             results.addAll(setPartList.getResults());

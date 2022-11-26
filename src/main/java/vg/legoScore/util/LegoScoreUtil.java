@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 public class LegoScoreUtil {
+   private final static float factorForThickness = 0.5f;
+
     private LegoScoreUtil(){
     }
 
@@ -71,7 +73,7 @@ public class LegoScoreUtil {
     private static float getScoreForPartsWithThirdDimension(Map<Part, Integer> partsWithThirdDimensionInName) {
         float score = 0.0f;
         score = partsWithThirdDimensionInName.entrySet().stream()
-                .map(entry -> getPartScoreFromPartName(entry.getKey().getName()) * 0.5f * getMeasurementAsFloat(getPartThickness(entry.getKey().getName())) * entry.getValue())
+                .map(entry -> getPartScoreFromPartName(entry.getKey().getName()) * factorForThickness * getMeasurementAsFloat(getPartThickness(entry.getKey().getName())) * entry.getValue())
                 .reduce(0.0f, Float::sum);
         return score;
     }
@@ -79,7 +81,7 @@ public class LegoScoreUtil {
     private static float getScoreForBricksWithHeightOne(Map<Part, Integer> bricksWithHeightOne) {
         float score = 0.0f;
         score = bricksWithHeightOne.entrySet().stream()
-                .map(entry -> getPartScoreFromPartName(entry.getKey().getName()) * 0.5f * entry.getValue())
+                .map(entry -> getPartScoreFromPartName(entry.getKey().getName()) * factorForThickness * entry.getValue())
                 .reduce(0.0f, Float::sum);
         return score;
     }

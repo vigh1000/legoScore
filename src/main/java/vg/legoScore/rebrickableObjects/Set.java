@@ -14,6 +14,12 @@ public class Set {
     public Set() {
     }
 
+    public Set(String setName, String setNum, Long num_parts) {
+       setName(setName);
+       setSet_num(setNum);
+       setNum_parts(num_parts);
+    }
+
     public String getSet_num() {return this.set_num;}
     public void setSet_num(String set_num) {this.set_num=set_num;}
 
